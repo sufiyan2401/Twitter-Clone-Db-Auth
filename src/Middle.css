@@ -1,0 +1,9 @@
+.mhead{
+    display: flex;
+justify-content: flex-start;    
+    align-items: center;
+    position:absolute;
+    left: 1000px;
+    top: 100px;
+    
+}

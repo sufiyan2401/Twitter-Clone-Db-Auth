@@ -1,4 +1,241 @@
 @import url("https://fonts.cdnfonts.com/css/chirp-2");
+.lastftext{
+  display:table-column-group;
+}
+.Fuct{
+  list-style: none;
+  
+}
+.profilephoto{
+  width: 00%;
+  padding: 100px;
+}
+/* ProfilePage.css */
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 70%;
+  margin-right: 10px;
+}
+
+.username {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.bio {
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.location,
+.website {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.stat {
+  text-align: center;
+  width: 33%;
+}
+
+.number {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.label {
+  font-size: 14px;
+}
+
+
+/* Poopyup */
+
+.modal {
+  display: none;  /* Hidden by default  */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 150px; /* Location of the box */
+  left: 0;
+  top: 0;
+  margin-left: 350px;
+  width: 40%; /* Full width */
+  height: 800%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  /* background-color: rgb(0,0,0); /* Fallback color */
+  /* background-color: rgba(0,0,0,0.4); Black w/ opacity */ 
+}
+.Allinf{
+  margin-left: 30px;
+  
+}
+/* Modal Content */
+.modal-content {
+  background-color: rgb(0, 0, 0);
+  margin: auto;
+  padding: 20px;
+  border: px solid #888;
+  border-radius: 25px;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.modal1 {
+    /* Hidden by default  */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 150px; /* Location of the box */
+  left: 0;
+  top: 0;
+  margin-left: 350px;
+  width: 40%; /* Full width */
+  height: 800%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  /* background-color: rgb(0,0,0); /* Fallback color */
+  /* background-color: rgba(0,0,0,0.4); Black w/ opacity */ 
+}
+.Allinf{
+  margin-left: 30px;
+  
+}
+/* Modal Content */
+.modal-content1 {
+  background-color: rgb(0, 0, 0);
+  margin: auto;
+  padding: 20px;
+  border: px solid #888;
+  border-radius: 25px;
+  width: 80%;
+}
+.Foy:hover{
+background-color: rgb(144, 135, 135);
+cursor: pointer;
+ 
+}
+
+/* The Close Button */
+.close1 {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.fnfb{
+  margin-left: 65px;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/*  */
+
+.sifield{
+  background-color: #000;
+  color: #fff;
+  padding: 10px;
+  width: 350px;
+  height: 25px;
+}
+.sifield:hover{
+  border-color: #1f9bf0;
+}
+.sifield:focus{
+  border-color: #1f9bf0;
+}
+
+
+.Container {
+  display: flex;
+}
+
+.Middles {
+  font-size: 12px;
+  margin-left: 15px;
+  position: sticky;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  border-right: 0.1rem solid var(--background-grey);
+
+}
+
+.Foy {
+  /* margin-top: 50px; */
+  font-weight: lighter;
+  /* margin-left: 120px;  */
+  
+}
+.active{
+  color: #1f9bf0;
+}
+.Fos {
+  font-weight: lighter;
+  margin-right: 50px;
+  justify-content: center;
+  cursor: pointer;
+
+}
+
+.Twhead {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rem;
+
+}
+
+.haper {
+  display: flex;
+
+}
+
+.Whh {
+  margin-left: 20px;
+  background-color: #000;
+  padding: 10px;
+  width: 400px;
+  color: wheat;
+
+}
 
 :root {
   --black: #000;
@@ -17,6 +254,53 @@ body {
   font-family: "Chirp", sans-serif;
   overflow-x: hidden;
   display: flex;
+}
+
+.tbn {
+  margin-left: 280px;
+  background-color: #1f9bf0;
+  color: #fff;
+  border-radius: 15px;
+  padding: 10px;
+
+}
+
+.usser {
+  /* size: 50px; */
+}
+
+.feedss {
+  display: flex;
+}
+
+.fnh {
+  font-size: 20px;
+}
+
+.tweetimg {
+  width: 100%;
+}
+
+.fem {
+  margin-top: 21px;
+  margin-left: 10px;
+  font-size: 20px;
+  font-weight: lighter;
+}
+
+.totwets {
+  display: flex;
+  justify-content: center;
+  font-weight: lighter;
+  color: #1f9bf0;
+  font-size: 16px;
+}
+
+.alfunc {
+  display: flex;
+  /* gap: 1rem; */
+  justify-content: space-evenly;
+  color: #1f9bf0;
 }
 
 /* Left Sidebar */
@@ -68,6 +352,8 @@ body {
 .link-flex:hover {
   background-color: var(--background-grey);
   border-radius: 2rem;
+  color: var(--blue);
+
 }
 
 .link-icon {
@@ -78,14 +364,61 @@ body {
 .link-text {
   font-size: 1.3rem;
   font-weight: 600;
+  text-decoration: none;
+  color: white;
+  
   margin: 1rem 0rem;
 }
-.twitter-white-logo{
+
+.twitter-white-logo {
   color: rgb(3, 152, 245);
 }
-.twitter-white-logo:hover{
+
+.twitter-white-logo:hover {
   color: white;
 }
+
+.trrends {
+  margin-top: 80px;
+  margin-left: 30px;
+  /* width: 300px; */
+  border-radius: 15px;
+  background-color: #17191D;
+  border: 40px solid #17191D;
+  width: 350px;
+  
+}
+.tends{
+  margin-top: 20px;
+  margin-left: 30px;
+  /* width: 300px; */
+  border-radius: 30px;
+  border: 5px solid #17191D;
+  width: 320px;
+}
+.wpt{
+  margin-left: 20px;
+}
+.pti{
+font-weight: 400;
+font-size: 13px;
+/* margin: 0; */
+}
+.sihe{
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  width: 270px;
+  height: 40px;
+  border-radius: 25px;
+  font-weight: 800;
+}
+.the {
+  margin-bottom: 50px;
+  font-weight: 800  ;
+  font-size:20px;
+}
+
 /*  */
 /* Media Queries */
 
@@ -93,12 +426,15 @@ body {
   .left-sidebar {
     width: 4rem !important;
   }
+
   .link-text {
     display: none;
   }
+
   .links-flex {
     margin: 0;
   }
+
   .link-flex {
     padding: 0;
     display: block;
@@ -106,49 +442,49 @@ body {
     margin-right: auto;
     margin-bottom: 1rem;
   }
-  .right-sidebar {
-    width: 70%;
-  }
 
-  .middle-section {
-    width: 100%;
+  .Middles {
+    margin-left: 80px;  
   }
 }
 
 @media only screen and (max-width: 1000px) {
-  .right-sidebar {
+
+  /* .Middles{
+    display: flex;
+    justify-content: center;
+    margin-left: 200px;
+  } */
+  .Trends {
     display: none;
+    margin: 0;
   }
 }
 
 @media only screen and (max-width: 700px) {
-  .bottom-signup {
-    width: 100%;
-    padding: 1rem 0rem;
-  }
-  .bottom-text {
-    display: none;
+  .Middles {
+    margin-left: 0px;
   }
 
-  .tabs-main-img {
-    height: 180px;
-    padding: 0.5rem;
+  .Foy {}
+}
+
+@media only screen and (max-width: 611px) {
+  .Middles {
+    margin-left: 0px;
+    width: 70%;
+    inline-size: max-content;
   }
 
-  .tab {
-    padding: 0rem 1rem;
+  .Foy {
+    font-size: 20px;
+    margin-top: 20px;
+    inline-size: max-content;
   }
+}
 
-  .tab button {
-    min-width: 6rem;
-  }
-
-  .tabs-main-img p {
-    margin-bottom: 0.5rem;
-  }
-
-  .trending-heading,
-  .trending-text {
-    margin: 0.5rem 0.5rem;
-  }
-} 
+/* .Middles{
+  display: flex;
+  justify-content: center;
+  margin-left: 200px;
+} */

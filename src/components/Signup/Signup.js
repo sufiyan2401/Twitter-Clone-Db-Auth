@@ -134,11 +134,11 @@ function Signup(url) {
 
         <InputControl
           value={values.name}
+          onChange={(event) =>
+            setValues((prev) => ({ ...prev, name: event.target.value }))}
           label="Name"
           placeholder="Enter your name"
-          onChange={(event) =>
-            setValues((prev) => ({ ...prev, name: event.target.value }))
-          }
+          
         />
         <InputControl
           value={values.email}

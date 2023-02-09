@@ -19,6 +19,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { useNavigate } from 'react-router-dom'
 import tweet from './tweet.jpg'
+import EditProfile from './EditProfile';
 import { Box } from '@mui/system';
 import Trends from './Trends'
 import {Link} from 'react-router-dom'
@@ -36,12 +37,14 @@ function PersonalMy(props) {
     email:"",
     fullName:"",
     imageUrl:"",
-    username:""
+    username:"",
+    bio:""
   })
   const [myTweets,setMyTweets] = useState({
     Tweets:"",
     
   })
+  const [modal,setmodal]  = useState(false)
   const getweets =()=>{
     get(child(dbRef, `Tweets/${ID}`)).then((snapshot) => {
       if (snapshot.exists()) {
@@ -71,7 +74,8 @@ function PersonalMy(props) {
           email:snapshot.val().email,
           fullName:snapshot.val().fullName,
           imageUrl:snapshot.val().imageUrl,
-          username:snapshot.val().username
+          username:snapshot.val().username,
+          bio:snapshot.val().bio
         }
         setMyObject(obj)
         // console.log(obj);
@@ -82,6 +86,7 @@ function PersonalMy(props) {
       console.error(error);
       alert("data not received")
     });}
+
     Getdata()
     var person = document.getElementById("whidd")
     const navigate = useNavigate();
@@ -94,6 +99,9 @@ function PersonalMy(props) {
     }
     function profile(){
         navigate("/MyAcount")
+    }
+    const toogleModal = ()=>{
+
     }
     function Signout(){
       
@@ -167,7 +175,7 @@ function PersonalMy(props) {
 
             </div>
             {/* middle site */}
-            <div className="Middles">
+            <div className="Middles pmid">
                 <ArrowBackIcon onClick={back} className="fs-3 mt-2"></ArrowBackIcon>
             <div className="profile-container">
       <div className="header">
@@ -183,11 +191,14 @@ function PersonalMy(props) {
           
       </div>
       <h1 className="username"><p className='mt-3 fs-4 font-monospace'>{myObject.username}</p></h1>
-      <button className='bg-info text-white border border-info-subtle rounded-pill'onClick={seeprofile} >Edit Profile</button>
+      <button className='bg-info text-white border border-info-subtle rounded-pill'onClick={()=>setmodal(true)} setmodal={setmodal}>Edit Profile</button>
+      {modal == true &&(
+      <EditProfile setmodal={setmodal} />
+      )}
       <hr />
       <div className="info">
         <p className="bio">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          {myObject.bio}
       
         </p>
         <p className="location">
@@ -228,6 +239,7 @@ function PersonalMy(props) {
           </li>
         </ul>
       </div>
+      <Box className="flowi">
       {Object.values(myTweets).map((value)=>{
           // console.log(value)
           return(<>
@@ -252,6 +264,7 @@ function PersonalMy(props) {
         </div>
         </>
         )})}
+        </Box>
             </div>
             <div className="Trends">
                 <Trends></Trends>

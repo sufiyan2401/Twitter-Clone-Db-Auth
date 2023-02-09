@@ -17,10 +17,16 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import BallotIcon from '@mui/icons-material/Ballot';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { Navigate, useNavigate } from 'react-router-dom'
+import twee from './tweet.jpg'
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import Stack from '@mui/material/Stack';
+
 // import { getAuth, signOut } from "firebase/auth";
 // import tweet from './tweet.jpg'
 import Trends from './Trends'
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {storage} from './firebase'
 // import {v4} from "uuid"
 // import {} from './firebase/storage'
@@ -30,6 +36,25 @@ import { getDatabase, ref, set, push ,child, get } from "firebase/database";
 import { uid } from "uid";
 import { uploadBytes,ref as storageRef , getDownloadURL} from 'firebase/storage';
 function App(props) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [score, setScore] = useState(0);
+  // const Timing = myObject.sort 
+  const [milliseconds, setMilliseconds] = useState(new Date().getTime());
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setMilliseconds(new Date().getTime());
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const handleOpen = () => {
+    setSidebarOpen(true);
+  };
+
+  const handleClose = () => {
+    setSidebarOpen(false);
+  };
+
   const navigate = useNavigate();
   let ID = localStorage.getItem("id")
   // console.log(ID)
@@ -38,13 +63,12 @@ function App(props) {
   const [imageUpload,setImageUpload]=useState(null);
   const [tweet, setTweet] = useState("");
   const handletextchange = (e) => {
+
     setTweet(e.target.value)
   }
   
-  const [myObject,setMyObject] = useState({
-    Tweets:"",
-    
-  })
+  const [myObject,setMyObject] = useState([])
+  
   const [myInfo,setMyInfo] = useState({
     contactNumber:"",
     email:"",
@@ -54,13 +78,44 @@ function App(props) {
   })
   
   const getweets =()=>{
-    get(child(dbRef, `Tweets/${ID}`)).then((snapshot) => {
+    get(child(dbRef, `Tweets/`)).then((snapshot) => {
       if (snapshot.exists()) {
         // console.log(snapshot.val());
-        setMyObject(snapshot.val());
+        let mesage = Object.values(snapshot.val())
+        // console.log(mesage,"Hello")
+        const alltweets = [];
+        const totaltwe = [];
+        Object.values(mesage).forEach((items,index)=>{
+          Object.values(items).forEach((ite,inde)=>{
+             console.log(inde)
+             var toow =  totaltwe.push(inde)
+            //  console.log(Math.max(totaltwe));
+            // console.log('Item: ', ite);
+            alltweets.push(ite);
+           })
+        });
+        console.log(alltweets , "alltwet");
+        let bryp =  (Object.keys(alltweets));
+        setScore(Math.max(...bryp))
+        // setMyObject(alltweets);
+        //  let mapping = Object.values(...mesage)
+        //  console.log(mapping , "80")
+        //  mapping.map((item,index)=>{
+        //   console.log(index)
+        //   console.log(item.Tweets)
+        //   console.log(item.url)
+        //   // console.log(item.Tweets)
+        //   // console.log(item.url)
+        //  })
+        
+        // console.log(Object.keys.val(mesage))
+        // const tweetArray = Object.values(snapshot.val()).map(value => value)
+        alltweets.sort((a, b) => b.Time - a.Time);
+        // console.log('ttt', tweetArray)
+        setMyObject(alltweets);
         // alert("data received")
       } else {
-        console.log("No data available");
+        // console.log("No data available");
       }
     }).catch((error) => {
       console.error(error);
@@ -68,7 +123,9 @@ function App(props) {
     });
   }
 
-  getweets()
+  // useEffect(() => {
+    getweets()
+  // },[])
   function Getdata(){
    get(child(dbRef, `user/${ID}`))
     .then((snapshot) => {
@@ -105,20 +162,30 @@ signOut(auth).then(() => {
 
     }
   function writeUserData() {
+    
     // if(imageUpload==null) {return}
     // else{
-    const imageRef = storageRef(storage,`images/${imageUpload  }`)
-    uploadBytes(imageRef, imageUpload).then((snapshot)=>{
-      getDownloadURL(storageRef(storage,`images/${imageUpload  }` ))
-  .then((url) => {
-    console.log(url)
-    
+      if(tweet==""){
+        alert("Tweet Not Be Empty")
+        return
+      }
+      const imageRef = storageRef(storage,`images/${imageUpload  }`)
+      uploadBytes(imageRef, imageUpload).then((snapshot)=>{
+        getDownloadURL(storageRef(storage,`images/${imageUpload  }` ))
+        .then((url) => {
+          console.log(url)
+          
     const db = getDatabase();
     push(ref(db,`Tweets/${ID}`), {
+      
       Tweets: tweet,
-      url:url
+      url:url,
+      Time:milliseconds
     });
     
+    //  setScore(score + 1)
+     setTweet("");
+     setImageUpload(null)
     alert("Your Tweet Has Been Sended")
   })
   .catch((error) => {
@@ -148,12 +215,59 @@ signOut(auth).then(() => {
       <MiddleSite></MiddleSite>
       </div> */}
       {/* middle site */}
+      
+      <div className="ls d-none ">
+        <div className="lf">
+          <div className="white-logo">
+            
+              <h2 className='sidhead'>Acount Info</h2>
+          </div>
+          <div className="lkf">
+
+            {/* <HomeIcon className="ll"></HomeIcon>
+            <p className="lt">Home</p> */}
+            <img className=" avatar " onClick={allass}  src={myInfo.imageUrl} />
+          </div>
+          <div className="lkf">
+
+            {/* <TagIcon className='link-icon'></
+            TagIcon>
+            <p className="lt">Explore</p> */}
+             <p className='fnh mt-3 sidname '>{myInfo.fullName}</p>
+             
+          </div>
+          <div className="lkf">
+          <p className='fnh  sidusername '>{myInfo.username}</p>
+          </div>
+          
+          <div className="lkf">
+            <BookmarkIcon className='link-icon'></BookmarkIcon>
+            <p className="lt">Bookmarks</p>
+          </div>
+          <div className="lkf">
+            <ViewListIcon className='link-icon'></ViewListIcon>
+            <p className="lt">Lists</p>
+          </div>
+          <div className="lkf">
+            <PersonIcon className='link-icon'></PersonIcon>
+            <p className="lt" onClick={profile}>Profile</p>
+          </div>
+          
+          <div className="lkf">
+                    <ExitToAppIcon   className='ll'/>
+                    <p className="lt" onClick={Signout}>SignOut</p>
+                       
+                    </div>
+
+        </div>
+
+      </div>
 
       <div className="left-sidebar">
         <div className="links-flex">
           <div className="white-logo">
             <a href="#">
-              <TwitterIcon className="twitter-white-logo"></TwitterIcon>
+              <TwitterIcon variant="h1" className="twitter-white-logo"></TwitterIcon>
 
             </a>
           </div>
@@ -188,7 +302,7 @@ signOut(auth).then(() => {
             <p className="link-text" onClick={profile}>Profile</p>
           </div>
           <div className="link-flex">
-            <MoreHorizIcon className='link-icon'></MoreHorizIcon>
+            <MoreHorizIcon className='c'></MoreHorizIcon>
             <p className="link-text" onClick={getweets}>Get Tweets</p>
           </div>
 
@@ -202,7 +316,70 @@ signOut(auth).then(() => {
 
       </div>
       {/* middle site */}
-      <div className="Middles">
+      <div className="Middles post-sidersc ">
+      <div className="white-logo resptw ">
+            <a href="#">
+              {/* <PersonIcon variant="h1" className="twitter-white-logo "></PersonIcon> */}
+              <img className="Ppic avatar"  onClick={handleOpen} sx={{ fontSize: 50 }} src={myInfo.imageUrl} ></img>
+              {sidebarOpen && (
+                <>
+                 <div className="ls">
+        <div className="lf">
+          <div className="white-logo d-flex justify-content-evenly">
+            
+              <h2 className='sidhead'>Acount Info</h2>
+              <h5 onClick={handleClose} className="closs">X</h5>
+
+          </div>
+          <div className="lkf">
+
+            {/* <HomeIcon className="ll"></HomeIcon>
+            <p className="lt">Home</p> */}
+            <img className=" avatar " onClick={allass}  src={myInfo.imageUrl} />
+          </div>
+          <div className="lkf">
+
+            {/* <TagIcon className='link-icon'></
+            TagIcon>
+            <p className="lt">Explore</p> */}
+             <p className='fnh mt-3 sidname '>{myInfo.fullName}</p>
+             
+          </div>
+          <div className="lkf">
+          <p className='fnh  sidusername '>{myInfo.username}</p>
+          </div>
+          
+          <div className="lkf">
+            <BookmarkIcon className='link-icon'></BookmarkIcon>
+            <p className="lt">Bookmarks</p>
+          </div>
+          <div className="lkf">
+            <ViewListIcon className='link-icon'></ViewListIcon>
+            <p className="lt">Lists</p>
+          </div>
+          <div className="lkf">
+            <PersonIcon className='link-icon'></PersonIcon>
+            <p className="lt" onClick={profile}>Profile</p>
+          </div>
+          
+          <div className="lkf">
+                    <ExitToAppIcon   className='ll'/>
+                    <p className="lt" onClick={Signout}>SignOut</p>
+                       
+                    </div>
+
+        </div>
+
+      </div>
+                          {/* <button onClick={handleClose}>Close</button>
+                          <p>Sidebar content goes here</p> */}
+                          </>
+              )}
+            </a>
+            <a href="#">
+              <TwitterIcon variant="h1" className="link-icon birdd"></TwitterIcon>
+            </a>
+          </div>
         <MiddleSite></MiddleSite>
         <div className="Twhead">
           <h1 className="Foy fs-5 mt-3 fw-bold  active">For you</h1>
@@ -213,7 +390,7 @@ signOut(auth).then(() => {
         <hr />
         <div className="haper">
           {/* <PersonIcon className="PPic" onClick={allass}  ></PersonIcon> */}
-          <img className="PPic avatar" onClick={allass}  src={myInfo.imageUrl} />
+          <img className="PPic avatar maintweetph" onClick={allass}  src={myInfo.imageUrl} />
           {/* <Tweetsender /> */}
           {/* <Crud /> */}
 
@@ -225,41 +402,65 @@ signOut(auth).then(() => {
         <br />
 
         {/* <hr className="hr" /> */}
-        <div className="alfunc mt-3">
+        <div className="alfunc">
           <br />
           {/* <PermMediaIcon type="file"></PermMediaIcon> */}
-          <input type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}} />
+          {/* <input type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}} className="info" /> */}
+          {/* <input type="file" class="btn btn-outline-primary" /> */}
+          <Stack direction="row" alignItems="center" spacing={2}>
+      {/* <Button variant="contained" component="label"> */}
+        
+        {/* <input hidden accept="image/*" multiple type="file" /> */}
+      {/* </Button> */}
+      <IconButton color="primary" aria-label="upload picture" component="label" onChange={(event)=>{setImageUpload(event.target.files[0])}}>
+        <input hidden accept="image/*" type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}}/>
+        <PhotoCamera />
+      </IconButton>
+    </Stack>
+
           <GifBoxIcon></GifBoxIcon>
           <BallotIcon></BallotIcon>
           <CalendarTodayIcon></CalendarTodayIcon>
           <button className="tbn" onClick={writeUserData} >Tweet</button>
         </div>
-        <hr />
-        <h3 className="totwets">Show 57 Tweets</h3>
+        <hr className='rts' />
+        <h3 className="totwets">Show {score} Tweets</h3>
         <hr />
         
-          
-        {Object.values(myObject).map((value)=>{
+        
+        {myObject.map((value)=>{
           // console.log(value)
           return(<>
+
+          <div className=''>
+          <div className='w'>
+          {/* <div className='col-sm col-lg'> */}
+          <div className="post-side">
           <div className="feedss">
           <img className="Ppic avatar"  onClick={allass} sx={{ fontSize: 50 }} src={myInfo.imageUrl} ></img>
           {/* <p className='fnh mt-3 fs-4 font-monospace '>{props.name ? ` ${props.name}` : ""}</p> */}
-          <p className='fnh mt-3 fs-4 font-monospace '>{myInfo.fullName}</p>
+          <p className='fnh mt-2 fs-6 font-monospace '>{myInfo.fullName}</p>
           {/* <VerifiedIcon></VerifiedIcon> */}
-          <p className="fem">@{myInfo.username}</p>
+          {/* {milliseconds} */}
+          <p className="fem fnh mt-2 fs-6 font-monospace fw-lighter">@{myInfo.username}</p>
           {/* <p className="fem">@{props.name ? ` ${props.name}` : ""}</p> */}
         </div>
           <p className="fem">{value.Tweets}</p>
+          
         <div>
 
+          {/* <img src={twee} alt="Tweet Image" className="tweetimg " /> */}
           <img src={value.url} alt="Tweet Image" className="tweetimg " />
 <hr />
           {/* <p>{myObject.Tweets}</p> */}
           {/* <img src={Following} alt="" className="tweetimg" /> */}
-          <ul>
+          {/* <ul>
             <li></li>
-          </ul>
+          </ul> */}
+        </div>
+        </div>
+        </div>
+        {/* </div> */}
         </div>
         </>
         )})}

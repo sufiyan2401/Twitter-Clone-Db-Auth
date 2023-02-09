@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100vw;
+  height: 87vh;
+  /* display: flex;
+  flex-wrap: wrap; */
+}
+
+.image {
+  height: 100%;
+  background: url('cover-img.png') center center/cover;
+  flex: 0 1 53vw;
+  position: relative;
+}
+
+.content {
+  flex: 0 0 47vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  padding: 2rem;
+}
+
+.big-bird {
+  width: 16rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  fill: #fff;
+}
+
+.small-bird {
+ width: 3.5rem;
+ fill: #1da1f2;
+}
+
+.MainHapen     {
+  color: #ffffff;
+  font-weight: 900;
+}
+.Join{
+  color: #f5f5f5;
+  font-weight: 900;
+}
+
+.MainHapen {
+  font-size: 5.5vw;
+}
+
+.Join {
+  font-size: 2.3rem;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24rem;
+  height: 3.3rem;
+  border-radius: 10vw;
+  font-size: 1rem;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.btn-signup {
+  background: #1da1f2;
+  color: #fff;
+  transition: all .2s ease;
+  margin-bottom: 20px;
+}
+
+.btn-signup:hover {
+  background: #1f94dd;
+}
+
+.btn-login {
+  border: 1px solid #1da1f2;
+  color: #1da1f2;
+}
+
+.footer {
+  padding: 1rem 2%;
+}
+
+.footer nav {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer nav a,
+.footer nav div {
+  text-decoration: none;
+  font-size: 13px;
+  color: #536471;
+  margin: .3rem .5rem;
+  text-transform: capitalize;
+  border-bottom: 1px solid transparent;
+  transition: all .2s ease;
+}
+
+.footer nav a:hover {
+  border-bottom: 1px solid #536471;
+}
+
+@media(max-width: 1050px) {
+  .content {
+    order: -1;
+    max-width: 600px;
+    height: 80vh;
+    margin: 0 auto;
+  }
+  .container {
+    /* width: 100vw;
+    height: 87vh; */
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+
+  .image {
+    height: 50vh;
+    flex:  0 1 100vw;
+  }
+
+  .button {
+    display: flex;
+  }
+
+  .btn {
+    width: 15rem;
+    margin-right: 1rem;
+  }
+
+  h1 {
+    font-size: 8vw;
+  }
+}
+
+@media(max-width: 580px) {
+  .content {
+    padding: 2rem;
+    margin: 0;
+  }
+
+  .button {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 25rem;
+  }
+  h1 {
+    font-size: 10vw;
+  }
+
+  h3 {
+    font-size: 1.7rem;
+  }
+}
+.modalbox{
+  background-color: black;
+}
+.CreateAccHead{
+  font-weight: 800;
+}
+.clodebtn{
+  cursor: pointer;
+}
+.MainInpFields{
+  align-items: stretch;
+    border: 0 solid black;
+    box-sizing: border-box;
+  -webkit-box-align: stretch;
+  -webkit-box-direction: normal;
+  -webkit-box-orient: vertical;
+  display: flex;
+  flex-basis: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  min-height: 0px;
+  min-width: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  position: relative;
+  z-index: 0;
+}
+.inpfieldsig{
+  /* color: #1da1f2;
+  border: 0px solid rgb(219, 219, 219); */
+}

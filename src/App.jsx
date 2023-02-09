@@ -10,6 +10,7 @@ import { auth } from './firebase';
 import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
 import EditProfile from './EditProfile';
+import MainPg from './MainPg';
 function App() {
   const [userName, setUserName] = useState("");
 
@@ -26,7 +27,8 @@ function App() {
     <>
 
       <Routes>
-        <Route path="/" element={<MainPage />}  />
+        <Route path="/" element={<MainPg />}  />
+        
         <Route path="/Home" element={<Twitter name={userName} />} />
         <Route path="/MyAcount" element={<PersonalMy  name={userName}/>} />
         <Route path="/Following" element={<Following name={userName} />} />

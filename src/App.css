@@ -452,7 +452,9 @@ body {
   color: var(--blue);
 
 }
-
+.dmp{
+  margin-bottom: 150px;
+}
 .link-icon {
   width: 1.8rem;
   height: 1.8rem;
@@ -522,35 +524,23 @@ font-size: 13px;
 .ls{
   display: none;
 }
-@media only screen and (990px<= width <=3000px) {
-  .feather{
-    display: none;
-      }
-}
 }
 @media only screen and (max-width: 2000px) {
   .resptw{
     display: none;
   }
-  .feather{
-display: none;
-  }
-}
-@media only screen and (max-width: 1300px) {
   
-  .feather{
-display: none;
+  .stickmsge{
+    display: none;
   }
+  .fade{display: none;}
+  #fade{display: none;}
 }
 
 @media only screen and (max-width: 1200px) {
-  .feather{
-  display: none;
-  }
   .left-sidebar {
     width: 4rem !important;
   }
-
   .link-text {
     display: none;
   }
@@ -589,6 +579,7 @@ display: none;
   .resptw{
    display: none;
   }
+  
   .Trends{
     display: none;
   }

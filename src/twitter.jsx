@@ -351,10 +351,10 @@ setTweet("");
                     <p className="link-text" onClick={Signout}>SignOut</p>
                        
                     </div>
-          <div className="link-flex feather">
+          {/* <div className="feather hspd">
           <HistoryEduIcon sx={{fontSize:40}} className="bg-info rounded-circle feather"/> 
                        
-                    </div>
+                    </div> */}
 
         </div>
 
@@ -451,7 +451,7 @@ setTweet("");
         
         {/* <input hidden accept="image/*" multiple type="file" /> */}
       {/* </Button> */}
-      <IconButton color="primary" aria-label="upload picture" component="label" onChange={(event)=>{setImageUpload(event.target.files[0])}}>
+      <IconButton color="primary" aria-label="upload picture" component="label" onChange={(event)=>{setImageUpload(event.target.files[0])}} className="dmp">
         <input hidden accept="image/*" type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}}/>
         <PhotoCamera />
       </IconButton>
@@ -506,7 +506,9 @@ setTweet("");
        
 <footer>
 <div className="">
-          <HistoryEduIcon sx={{fontSize:60}} onClick={mOpen} className=" feather stickmsge  rounded-circle "/> 
+<Box classNam="fade">
+          <HistoryEduIcon sx={{fontSize:60}} onClick={mOpen} id="fade" className="stickmsge rounded-circle "/> 
+</Box>
       <Modal
         open={open}
         // onClose={handleClose}

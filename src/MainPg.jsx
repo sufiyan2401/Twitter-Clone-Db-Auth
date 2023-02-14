@@ -250,7 +250,7 @@ function MainPg(url) {
             setValues((prev) => ({ ...prev, FullName: event.target.value }))
           }/>
         {/* <InputLabel htmlFor="standard-adornment-password" className="inpfieldsig bg-dark text-light" >Contact No</InputLabel> */}
-      <input type="text" id="inputField" placeholder="Contact Number" className='bg-dark'  value={values.ContactNumber}  onChange={(event) =>
+      <input type="Number" id="inputField" placeholder="Contact Number" className='bg-dark'  value={values.ContactNumber}  onChange={(event) =>
             setValues((prev) => ({ ...prev, ContactNumber: event.target.value }))
           } />
       {/* <TextField id="filled-basic" label="Filled" variant="filled" />

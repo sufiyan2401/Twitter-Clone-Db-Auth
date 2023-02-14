@@ -11,6 +11,7 @@ import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
 import EditProfile from './EditProfile';
 import MainPg from './MainPg';
+import TotalUsers from './TotalUsers';
 function App() {
   const [userName, setUserName] = useState("");
 
@@ -28,7 +29,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<MainPg />}  />
-        
+        <Route path="/Users" element={<TotalUsers />}  />
         <Route path="/Home" element={<Twitter name={userName} />} />
         <Route path="/MyAcount" element={<PersonalMy  name={userName}/>} />
         <Route path="/Following" element={<Following name={userName} />} />

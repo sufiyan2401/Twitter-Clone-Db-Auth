@@ -14,14 +14,17 @@ import { getAuth, signOut } from "firebase/auth";
 import PermMediaIcon from '@mui/icons-material/PermMedia';
 import GifBoxIcon from '@mui/icons-material/GifBox';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import ClearIcon from '@mui/icons-material/Clear';
 import BallotIcon from '@mui/icons-material/Ballot';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { Navigate, useNavigate } from 'react-router-dom'
 import twee from './tweet.jpg'
+
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Stack from '@mui/material/Stack';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 
 // import { getAuth, signOut } from "firebase/auth";
 // import tweet from './tweet.jpg'
@@ -35,7 +38,28 @@ import {storage} from './firebase'
 import { getDatabase, ref, set, push ,child, get } from "firebase/database";
 import { uid } from "uid";
 import { uploadBytes,ref as storageRef , getDownloadURL} from 'firebase/storage';
+
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
+const style = {
+  // position: 'absolute',
+  // top: '30%',
+  // left: '50%',
+  // transform: 'translate(-50%, -50%)',
+  // width: 600,
+  // // bgcolor: 'background.paper',
+  // border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 function App(props) {
+  const [open, setOpen] = React.useState(false);
+  const mOpen = () => setOpen(true);
+  const mClose = () => setOpen(false);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [score, setScore] = useState(0);
   // const Timing = myObject.sort 
@@ -46,10 +70,13 @@ function App(props) {
     }, 1000);
     return () => clearInterval(intervalId);
   }, []);
+  
+  
+    const handleOpen = () => {
+      setSidebarOpen(true);
+    };
+  
 
-  const handleOpen = () => {
-    setSidebarOpen(true);
-  };
 
   const handleClose = () => {
     setSidebarOpen(false);
@@ -87,16 +114,18 @@ function App(props) {
         const totaltwe = [];
         Object.values(mesage).forEach((items,index)=>{
           Object.values(items).forEach((ite,inde)=>{
-             console.log(inde)
+            //  console.log(inde)
              var toow =  totaltwe.push(inde)
             //  console.log(Math.max(totaltwe));
             // console.log('Item: ', ite);
             alltweets.push(ite);
            })
         });
-        console.log(alltweets , "alltwet");
+        // console.log(alltweets , "alltwet");
         let bryp =  (Object.keys(alltweets));
-        setScore(Math.max(...bryp))
+         let soce = (Math.max(...bryp))+1
+         setScore(soce)
+        //  setScore(Math.max(...bryp))
         // setMyObject(alltweets);
         //  let mapping = Object.values(...mesage)
         //  console.log(mapping , "80")
@@ -153,7 +182,7 @@ function App(props) {
       
 const auth = getAuth();
 signOut(auth).then(() => {
-  navigate("/login")
+  navigate("/")
   alert("Sign-out successful.")
   // Navigate("/login")
 }).catch((error) => {
@@ -169,6 +198,21 @@ signOut(auth).then(() => {
         alert("Tweet Not Be Empty")
         return
       }
+       if(imageUpload===null){
+        const db = getDatabase();
+    push(ref(db,`Tweets/${ID}`), {
+      
+      Tweets: tweet,
+      Time:milliseconds
+      // url:url,
+    })
+    .then(()=>{
+alert("tweet sended")
+setTweet("");
+    }).catch((error)=>{
+      alert("error")
+    })
+      }else{
       const imageRef = storageRef(storage,`images/${imageUpload  }`)
       uploadBytes(imageRef, imageUpload).then((snapshot)=>{
         getDownloadURL(storageRef(storage,`images/${imageUpload  }` ))
@@ -196,7 +240,7 @@ signOut(auth).then(() => {
       // alert("Image Uploaded")
       
     })
-  }
+  }}
   var person = document.getElementById("whidd")
   
 
@@ -211,11 +255,7 @@ signOut(auth).then(() => {
   }
   return (
     <div className="Container">
-      {/* <div className="Middles">
-      <MiddleSite></MiddleSite>
-      </div> */}
-      {/* middle site */}
-      
+     
       <div className="ls d-none ">
         <div className="lf">
           <div className="white-logo">
@@ -311,6 +351,10 @@ signOut(auth).then(() => {
                     <p className="link-text" onClick={Signout}>SignOut</p>
                        
                     </div>
+          <div className="link-flex feather">
+          <HistoryEduIcon sx={{fontSize:40}} className="bg-info rounded-circle feather"/> 
+                       
+                    </div>
 
         </div>
 
@@ -389,15 +433,10 @@ signOut(auth).then(() => {
 
         <hr />
         <div className="haper">
-          {/* <PersonIcon className="PPic" onClick={allass}  ></PersonIcon> */}
+          
           <img className="PPic avatar maintweetph" onClick={allass}  src={myInfo.imageUrl} />
-          {/* <Tweetsender /> */}
-          {/* <Crud /> */}
-
-          <textarea cols="30" rows="1" className="Whh" name="" value={tweet} onChange={handletextchange}></textarea>
-
-          {/* <input  label="Whats Hapenning" className="Whh" placeholder="Whats Hapenning"  /> */}
-          {/* <input type="text" placeholder="Whats Happening" className="Whh" /> */}
+          
+          <textarea cols="50" rows="1" className="Whh" name="" value={tweet} onChange={handletextchange} placeholder="What's Happening.."></textarea>
         </div>
         <br />
 
@@ -421,7 +460,7 @@ signOut(auth).then(() => {
           <GifBoxIcon></GifBoxIcon>
           <BallotIcon></BallotIcon>
           <CalendarTodayIcon></CalendarTodayIcon>
-          <button className="tbn" onClick={writeUserData} >Tweet</button>
+          <button className="tbn" onClick={writeUserData} disabled={!tweet} >Tweet</button>
         </div>
         <hr className='rts' />
         <h3 className="totwets">Show {score} Tweets</h3>
@@ -431,7 +470,6 @@ signOut(auth).then(() => {
         {myObject.map((value)=>{
           // console.log(value)
           return(<>
-
           <div className=''>
           <div className='w'>
           {/* <div className='col-sm col-lg'> */}
@@ -462,15 +500,67 @@ signOut(auth).then(() => {
         </div>
         {/* </div> */}
         </div>
+        
         </>
         )})}
        
+<footer>
+<div className="">
+          <HistoryEduIcon sx={{fontSize:60}} onClick={mOpen} className=" feather stickmsge  rounded-circle "/> 
+      <Modal
+        open={open}
+        // onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="main-modal "
+      >
+        <Box sx={style} className="modalmm">
+
+          
+        
+          <ClearIcon onClick={mClose} className="dele" />
+          <Stack direction="row" alignItems="center" spacing={2}>
+          <div className="haper">
+          
+          <img className=" avatar maintweetph" onClick={allass}  src={myInfo.imageUrl} />
+          <textarea type="text" className='inapa' placeholder="What's Happening"  value={tweet} onChange={handletextchange}/>
+          {/* <textarea cols="10" rows="1" className="Whh" name="" value={tweet} onChange={handletextchange}></textarea> */}
+        </div>
+          
+    </Stack>
+          <hr />
+          <div className="postw">
+          <br />
+          {/* <PermMediaIcon type="file"></PermMediaIcon> */}
+          {/* <input type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}} className="info" /> */}
+          {/* <input type="file" class="btn btn-outline-primary" /> */}
+          <Stack direction="row" alignItems="center" spacing={0}>
+      {/* <Button variant="contained" component="label"> */}
+        
+        {/* <input hidden accept="image/*" multiple type="file" /> */}
+      {/* </Button> */}
+      <IconButton color="primary" aria-label="upload picture" component="label" onChange={(event)=>{setImageUpload(event.target.files[0])}}>
+        <input hidden accept="image/*" type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}}/>
+        <PhotoCamera className='camera'/>
+      </IconButton>
+    </Stack>
+
+          <GifBoxIcon></GifBoxIcon>
+          <BallotIcon></BallotIcon>
+          <CalendarTodayIcon></CalendarTodayIcon>
+          <button className="tbn" disabled={!tweet} onClick={writeUserData} >Tweet</button>
+        </div>
+        
+        </Box>
+      </Modal>
+
+                    </div>
+</footer>
       </div>
       
       <div className="Trends">
         <Trends></Trends>
       </div>
-
     </div>
   );
 }

@@ -11,6 +11,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
+import Typography from '@mui/material/Typography';
+
 import GifBoxIcon from '@mui/icons-material/GifBox';
 import BallotIcon from '@mui/icons-material/Ballot';
 import { getAuth, signOut } from "firebase/auth";
@@ -23,15 +25,26 @@ import EditProfile from './EditProfile';
 import { Box } from '@mui/system';
 import Trends from './Trends'
 import {Link} from 'react-router-dom'
+import TotalUsers from './TotalUsers';
 // import { ref, set, get, update, remove, child } from 'firebase/database'
 import { getDatabase, ref, child, get } from "firebase/database";
 import { useState } from 'react';
 const dbRef = ref(getDatabase());
 let ID = localStorage.getItem("id")
 function PersonalMy(props) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   function seeprofile(){
     navigate("/editprofile")
   }
+  const handleOpen = () => {
+    setSidebarOpen(true);
+  };
+
+
+
+const handleClose = () => {
+  setSidebarOpen(false);
+};
   const [myObject,setMyObject] = useState({
     contactNumber:"",
     email:"",
@@ -107,7 +120,7 @@ function PersonalMy(props) {
       
       const auth = getAuth();
       signOut(auth).then(() => {
-        navigate("/login")
+        navigate("/")
         alert("Sign-out successful.")
         // Navigate("/login")
       }).catch((error) => {
@@ -175,74 +188,46 @@ function PersonalMy(props) {
 
             </div>
             {/* middle site */}
-            <div className="Middles pmid">
+            <div className="Middles pmid scrolling">
+              
+            <Box className="d-flex topsec">
                 <ArrowBackIcon onClick={back} className="fs-3 mt-2"></ArrowBackIcon>
-            <div className="profile-container">
-      <div className="header">
-        {/* <ArrowBackIcon onClick={back} className="fs-3 mt-2"></ArrowBackIcon> */}
-        <img
-          className="avatar"
+                <h1 className="username"><p className='mt-3 fs-4 font-monospace'>{myObject.fullName}</p></h1>
+            </Box>
+            <Box>
+              <Box className='bigpro'>
+                <Box className="d-flex twdsa">
+              <img
+          className="avatar iapia"
           // src="https://picsum.photos/200"
           src={myObject.imageUrl}
           alt="profile avatar"
         />
-        {/* <h1 className="username"><p className='mt-3 fs-4 font-monospace'>{props.name ? ` ${props.name}` : ""}</p></h1> */}
-        <h1 className="username"><p className='mt-3 fs-4 font-monospace'>{myObject.fullName}</p></h1>
-          
-      </div>
-      <h1 className="username"><p className='mt-3 fs-4 font-monospace'>{myObject.username}</p></h1>
-      <button className='bg-info text-white border border-info-subtle rounded-pill'onClick={()=>setmodal(true)} setmodal={setmodal}>Edit Profile</button>
+        {/* <button className='ediban' setmodal={setmodal}> Edit Profile</button> */}
+        <button className="ediban fs-6  rounded-pill"onClick={()=>setmodal(true)} setmodal={setmodal}>Edit Profile</button>
+        {/* <button className='bg-info text-white border border-info-subtle rounded-pill ediban'onClick={()=>setmodal(true)} setmodal={setmodal}>Edit Profile</button> */}
       {modal == true &&(
       <EditProfile setmodal={setmodal} />
       )}
-      <hr />
-      <div className="info">
-        <p className="bio">
-          {myObject.bio}
-      
-        </p>
-        <p className="location">
-          <i className="fas fa-map-marker-alt"></i> Location
-        </p>
-        <p className="website">
-          <i className="fas fa-globe"></i> Website
-        </p>
-      </div>
-      <div className="stats">
-        <div className="stat">
-          <p className="number">245</p>
-          <p className="label">Tweets</p>
-        </div>
-        <div className="stat">
-          <p className="number">2.5K</p>
-          <p className="label">Followers</p>
-        </div>
-        <div className="stat">
-          <p className="number">245</p>
-          <p className="label">Following</p>
-        </div>
-      </div>
-    </div>
-      <div clasName="FunctAccs ">
-        <ul className="d-flex justify-content-evenly Fuct">
-          <li className='fs-5 active'>
-            Tweets
-          </li>
-          <li className='fs-5'>
-            Tweets&Replies
-          </li>
-          <li className='fs-5'>
-            Medias
-          </li>
-          <li className='fs-5'>
-            Links
-          </li>
-        </ul>
-      </div>
-      <Box className="flowi">
+        </Box>
+              </Box>
+            </Box>
+            <Box className="mainan">
+            <h1 className="username"><p className='mt-3 fs-4 font-monospace'>{myObject.fullName}</p></h1>
+            <h1 className="username ateh"><p className='  fs-6 '>@{myObject.username}</p></h1>
+            <h1 className="username "><p className='  fs-6 '>{myObject.bio}</p></h1>
+            </Box>
+            <hr />
+            <Box>
+              <Typography className="csa">Tweets</Typography>
+              <div className='bg-info linepa'></div>
+              <hr />
+            </Box>
+            <Box className="flowi">
       {Object.values(myTweets).map((value)=>{
           // console.log(value)
-          return(<>
+          return(
+          <>
           <div className="feedss">
           <img className="Ppic avatar"  onClick={allass} sx={{ fontSize: 50 }} src={myObject.imageUrl} ></img>
           {/* <p className='fnh mt-3 fs-4 font-monospace '>{props.name ? ` ${props.name}` : ""}</p> */}
@@ -258,13 +243,17 @@ function PersonalMy(props) {
 
           {/* <p>{myObject.Tweets}</p> */}
           {/* <img src={Following} alt="" className="tweetimg" /> */}
-          <ul>
-            <li></li>
-          </ul>
+         
         </div>
         </>
         )})}
         </Box>
+        <hr />
+    <Box>
+      <Typography variant="h5" className="fw-bold">Who To Follow</Typography>
+      <br />
+    <TotalUsers />
+    </Box>
             </div>
             <div className="Trends">
                 <Trends></Trends>

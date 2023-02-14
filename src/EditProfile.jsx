@@ -77,7 +77,7 @@ let ID = localStorage.getItem("id")
             getDownloadURL(storageRef(storage,`images/${imageUpload  }` ))
             .then((url) => {
               console.log(url)
-              push(ref(db, `user/${ID}`), {
+              update(ref(db, `user/${ID}`), {
                 fullName:name,
                 contactNumber:contact,
                 bio:bio,

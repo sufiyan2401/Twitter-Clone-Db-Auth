@@ -13,13 +13,14 @@ function EditProfile({setmodal}) {
   const [name , setName] = useState("");
   const [bio , setbio] = useState("");
   const [contact , setcontact] = useState("");
-    const [myObject,setMyObject] = useState({
+  const [myObject,setMyObject] = useState({
         contactNumber:"",
         email:"",
         fullName:"",
         imageUrl:"",
         username:""
       })
+const [successmsg , setSuccessMsg] = useState("")
       const db = getDatabase();
     const dbRef = ref(getDatabase());
 let ID = localStorage.getItem("id")
@@ -70,8 +71,6 @@ let ID = localStorage.getItem("id")
        setbio(event.target.value)
         }
   const onSubmit = (event)=>{
-          // event.preventDefault();
-          alert("Form Sumbitted")
           const imageRef = storageRef(storage,`images/${imageUpload  }`)
           uploadBytes(imageRef, imageUpload).then((snapshot)=>{
             getDownloadURL(storageRef(storage,`images/${imageUpload  }` ))
@@ -83,7 +82,11 @@ let ID = localStorage.getItem("id")
                 bio:bio,
                 imageUrl:url
               }).then(()=>{
-                alert("Data Updated")
+                // alert("Data Updated")
+                setSuccessMsg("Your Profile Is Editted ")
+                setTimeout(() => {
+                  setSuccessMsg("")
+                }, 2000);
               }).catch((error)=>{
                 alert("Data error" + error)
               })
@@ -105,7 +108,7 @@ let ID = localStorage.getItem("id")
             {/* <Box className="delete-icon" onClick={()=>setmodal(false)}>X</Box> */}
             <ClearIcon onClick={()=>setmodal(false)} className="dele"></ClearIcon>
             <Typography className="fs-3">Edit Profile</Typography>
-            <Button variant="filled" onClick={onSubmit}>Save</Button>
+            <Button variant="filled" onClick={onSubmit} disabled={!name|!contact}>Save</Button>
             
             </Box>
             <Box >
@@ -123,6 +126,7 @@ let ID = localStorage.getItem("id")
     </Stack>
          {/* <input type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}} /> */}
             </Box>
+    <Typography variant="h5" className="succesmsf">{successmsg}</Typography>
             <label>Name:</label>
             <input type="text" className='editinp' placeholder='Name' onChange={inputevent} value={name} name='name'/>
             {/* <input type="text" className='editinp' placeholder='Name' onChange={inputevent} value={name} name='name'/> */}

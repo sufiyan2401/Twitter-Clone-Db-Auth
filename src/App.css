@@ -6,6 +6,13 @@
   list-style: none;
   
 }
+.loadersd{
+  
+   
+}
+.heal{
+  
+}
 .profilephoto{
   width: 00%;
   padding: 100px;
@@ -18,13 +25,35 @@
   align-items: center;
   padding: 40px;
 }
-
+.heica{
+  gap:2rem;
+}
 .header {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
 }
+.honuni:disabled {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  color: #DDDDDD;
+  cursor: pointer;
+}
+.honuni:disabled:hover  {
+  /* --button-text: "Unfollow"; */
+  background-color: rgba(243, 30, 30, 0.7) !important;
+  color: #ff0000;
+}
+.honuni:disabled:hover::before  {
+  /* --button-text: "Unfollow";
+  background-color: rgba(243, 30, 30, 0.7) !important;
+  color: #ff0000; */
+  content: var(--button-text);
+}
 
+.fgeah:disabled{
+  background-color: palevioletred;
+  display: none;
+}
 .avatar {
   width: 40px;
   height: 40px;
@@ -310,14 +339,17 @@ body {
   width: 70%;
   color: white;
 }
-
+.tbn:disabled{
+ background-color:#29516b;
+ transition: 0.9s;
+}
 #inputField:focus {
   border-color:#1f9bf0;
   
   outline: none;
 }
 .Passty{
-  width: 253%;
+  width: 191%;
 }
 
 .alfunc {
@@ -455,9 +487,17 @@ body {
 .dmp{
   margin-bottom: 150px;
 }
+.searinac{
+  margin-left: 30px;
+  
+}
 .link-icon {
   width: 1.8rem;
   height: 1.8rem;
+}
+.plaee::placeholder{
+  color: rgb(255, 255, 255);
+  font-size: 55px;
 }
 
 .link-text {
@@ -478,7 +518,7 @@ body {
 }
 
 .trrends {
-  margin-top: 80px;
+  margin-top: 30px;
   margin-left: 30px;
   /* width: 300px; */
   border-radius: 15px;
@@ -530,11 +570,11 @@ font-size: 13px;
     display: none;
   }
   
-  .stickmsge{
+  /* .stickmsge{
     display: none;
-  }
-  .fade{display: none;}
-  #fade{display: none;}
+  } */
+  /* .fade{display: none;}
+  #fade{display: none;} */
 }
 
 @media only screen and (max-width: 1200px) {

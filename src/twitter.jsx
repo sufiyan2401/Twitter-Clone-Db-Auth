@@ -1,10 +1,12 @@
 import './App.css';
 import Following from './Following.jpg'
+import TotalUsers from './TotalUsers';
 import MiddleSite from './MiddleSite';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import HomeIcon from '@mui/icons-material/Home';
 import TagIcon from '@mui/icons-material/Tag';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import Search from './Search'
 import EmailIcon from '@mui/icons-material/Email';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -17,6 +19,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ClearIcon from '@mui/icons-material/Clear';
 import BallotIcon from '@mui/icons-material/Ballot';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Navigate, useNavigate } from 'react-router-dom'
 import twee from './tweet.jpg'
 
@@ -44,25 +47,28 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
 const style = {
-  // position: 'absolute',
-  // top: '30%',
-  // left: '50%',
-  // transform: 'translate(-50%, -50%)',
-  // width: 600,
-  // // bgcolor: 'background.paper',
-  // border: '2px solid #000',
+  
   boxShadow: 24,
   p: 4,
 };
 
 function App(props) {
+  const [sended , setSended] = useState("")
+  const [likes, setLikes] = useState(0);
+  const [brd , setBrd] = useState(false)
+  const [isLiked, setIsLiked] = useState(false);
+  const [ imagePreview, setImagePreview] = useState("");
+  const [tweeturl , setTweetUrl] = useState("")
+  const [mywork , setMyWork] = useState("")
   const [open, setOpen] = React.useState(false);
   const mOpen = () => setOpen(true);
   const mClose = () => setOpen(false);
-
+  
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [score, setScore] = useState(0);
-  // const Timing = myObject.sort 
+  const handleLike = (value) => {
+    
+  };
   const [milliseconds, setMilliseconds] = useState(new Date().getTime());
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -86,7 +92,7 @@ function App(props) {
   let ID = localStorage.getItem("id")
   // console.log(ID)
   const dbRef = ref(getDatabase());
-
+const[tester,setTeseter] = useState(null)
   const [imageUpload,setImageUpload]=useState(null);
   const [tweet, setTweet] = useState("");
   const handletextchange = (e) => {
@@ -101,7 +107,8 @@ function App(props) {
     email:"",
     fullName:"",
     imageUrl:"",
-    username:""
+    username:"",
+    likes:""
   })
   
   const getweets =()=>{
@@ -125,23 +132,10 @@ function App(props) {
         let bryp =  (Object.keys(alltweets));
          let soce = (Math.max(...bryp))+1
          setScore(soce)
-        //  setScore(Math.max(...bryp))
-        // setMyObject(alltweets);
-        //  let mapping = Object.values(...mesage)
-        //  console.log(mapping , "80")
-        //  mapping.map((item,index)=>{
-        //   console.log(index)
-        //   console.log(item.Tweets)
-        //   console.log(item.url)
-        //   // console.log(item.Tweets)
-        //   // console.log(item.url)
-        //  })
-        
-        // console.log(Object.keys.val(mesage))
-        // const tweetArray = Object.values(snapshot.val()).map(value => value)
         alltweets.sort((a, b) => b.Time - a.Time);
         // console.log('ttt', tweetArray)
         setMyObject(alltweets);
+        
         // alert("data received")
       } else {
         // console.log("No data available");
@@ -166,7 +160,10 @@ function App(props) {
           email:snapshot.val().email,
           fullName:snapshot.val().fullName,
           imageUrl:snapshot.val().imageUrl,
-          username:snapshot.val().username
+          username:snapshot.val().username,
+          likes:snapshot.val().likes
+          
+          // likes:snapshot.val().likes
         }
         setMyInfo(obj)
         // console.log(obj);
@@ -189,11 +186,8 @@ signOut(auth).then(() => {
   alert(error)
 });
 
-    }
-  function writeUserData() {
-    
-    // if(imageUpload==null) {return}
-    // else{
+}
+function writeUserData() {
       if(tweet==""){
         alert("Tweet Not Be Empty")
         return
@@ -201,14 +195,20 @@ signOut(auth).then(() => {
        if(imageUpload===null){
         const db = getDatabase();
     push(ref(db,`Tweets/${ID}`), {
-      
       Tweets: tweet,
-      Time:milliseconds
-      // url:url,
+      Time:milliseconds,
+      ProfilePic:myInfo.imageUrl,
+      fullName:myInfo.fullName,
+      likes:likes,
+      // aid:mywork
     })
     .then(()=>{
-alert("tweet sended")
+// alert("tweet sended")
+setSended("Tweet Sended Succesfully")
 setTweet("");
+setTimeout(() => {
+  setSended("");
+}, 2000);
     }).catch((error)=>{
       alert("error")
     })
@@ -218,29 +218,34 @@ setTweet("");
         getDownloadURL(storageRef(storage,`images/${imageUpload  }` ))
         .then((url) => {
           console.log(url)
-          
-    const db = getDatabase();
-    push(ref(db,`Tweets/${ID}`), {
+          setTweetUrl(url)
+          const db = getDatabase();
+          push(ref(db,`Tweets/${ID}`), {
       
       Tweets: tweet,
+      Time:milliseconds,
+      likes:likes,
+      ProfilePic:myInfo.imageUrl,
+      fullName:myInfo.fullName,
       url:url,
-      Time:milliseconds
+      username:myInfo.username,
+      // aid:mywork
     });
-    
-    //  setScore(score + 1)
-     setTweet("");
-     setImageUpload(null)
-    alert("Your Tweet Has Been Sended")
+    setSended("Tweet Sended Succesfully")
+
+    setTweet("");
+    setImageUpload(null)
+    setImagePreview(null)
+    setTimeout(() => {
+      setSended("");
+    }, 4000);
   })
   .catch((error) => {
-    // Handle any errors
   });
-
-      console.log(snapshot)
-      // alert("Image Uploaded")
-      
-    })
-  }}
+  
+  
+})
+}}
   var person = document.getElementById("whidd")
   
 
@@ -415,8 +420,7 @@ setTweet("");
         </div>
 
       </div>
-                          {/* <button onClick={handleClose}>Close</button>
-                          <p>Sidebar content goes here</p> */}
+              
                           </>
               )}
             </a>
@@ -436,69 +440,72 @@ setTweet("");
           
           <img className="PPic avatar maintweetph" onClick={allass}  src={myInfo.imageUrl} />
           
-          <textarea cols="50" rows="1" className="Whh" name="" value={tweet} onChange={handletextchange} placeholder="What's Happening.."></textarea>
+          <textarea cols="50" rows="1" className="Whh" name="" value={tweet} onChange={handletextchange} placeholder="What's Happening..">
+          </textarea>
         </div>
+          {imagePreview && <img src={imagePreview} className="tweetimg " />}
         <br />
 
         {/* <hr className="hr" /> */}
         <div className="alfunc">
           <br />
-          {/* <PermMediaIcon type="file"></PermMediaIcon> */}
-          {/* <input type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}} className="info" /> */}
-          {/* <input type="file" class="btn btn-outline-primary" /> */}
           <Stack direction="row" alignItems="center" spacing={2}>
-      {/* <Button variant="contained" component="label"> */}
-        
-        {/* <input hidden accept="image/*" multiple type="file" /> */}
-      {/* </Button> */}
       <IconButton color="primary" aria-label="upload picture" component="label" onChange={(event)=>{setImageUpload(event.target.files[0])}} className="dmp">
-        <input hidden accept="image/*" type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}}/>
+        <input hidden accept="image/*" type="file" onChange={(event)=>{
+          setImageUpload(event.target.files[0]);
+          setImagePreview(URL.createObjectURL(event.target.files[0]));
+          }}/>
         <PhotoCamera />
       </IconButton>
     </Stack>
+    {/* {imagePreview && <img src={imagePreview} />} */}
 
           <GifBoxIcon></GifBoxIcon>
           <BallotIcon></BallotIcon>
           <CalendarTodayIcon></CalendarTodayIcon>
           <button className="tbn" onClick={writeUserData} disabled={!tweet} >Tweet</button>
         </div>
+        <Box>
+        <Typography className="text-primary">{sended}</Typography>
+        </Box>
         <hr className='rts' />
         <h3 className="totwets">Show {score} Tweets</h3>
         <hr />
         
         
         {myObject.map((value)=>{
-          // console.log(value)
+          // console.log("tweets",value)
           return(<>
-          <div className=''>
+          <div className='' >
           <div className='w'>
-          {/* <div className='col-sm col-lg'> */}
+          
           <div className="post-side">
           <div className="feedss">
-          <img className="Ppic avatar"  onClick={allass} sx={{ fontSize: 50 }} src={myInfo.imageUrl} ></img>
-          {/* <p className='fnh mt-3 fs-4 font-monospace '>{props.name ? ` ${props.name}` : ""}</p> */}
-          <p className='fnh mt-2 fs-6 font-monospace '>{myInfo.fullName}</p>
-          {/* <VerifiedIcon></VerifiedIcon> */}
-          {/* {milliseconds} */}
-          <p className="fem fnh mt-2 fs-6 font-monospace fw-lighter">@{myInfo.username}</p>
-          {/* <p className="fem">@{props.name ? ` ${props.name}` : ""}</p> */}
+          <img className="Ppic avatar"  onClick={allass} sx={{ fontSize: 50 }} src={value.ProfilePic} ></img>
+          <p className='fnh mt-2 fs-6 font-monospace '>{value.fullName}</p>
+          {/* <p className="fem fnh mt-2 fs-6 font-monospace fw-lighter">@{value.username}</p> */}
         </div>
           <p className="fem">{value.Tweets}</p>
-          
-        <div>
+          <p>{value.likes} likes</p>
+          <FavoriteBorderIcon style={{cursor:"pointer"}} onClick={() => handleLike(value)} disabled={isLiked} className="fgeah" />
+          {/* {isLiked ? "Liked" : "Like"} */}
 
-          {/* <img src={twee} alt="Tweet Image" className="tweetimg " /> */}
+        <div>
+          {value.url && 
+          (
+            <>
           <img src={value.url} alt="Tweet Image" className="tweetimg " />
+
+          
+
+          </>
+          )
+        }
 <hr />
-          {/* <p>{myObject.Tweets}</p> */}
-          {/* <img src={Following} alt="" className="tweetimg" /> */}
-          {/* <ul>
-            <li></li>
-          </ul> */}
         </div>
         </div>
         </div>
-        {/* </div> */}
+        
         </div>
         
         </>
@@ -526,21 +533,14 @@ setTweet("");
           
           <img className=" avatar maintweetph" onClick={allass}  src={myInfo.imageUrl} />
           <textarea type="text" className='inapa' placeholder="What's Happening"  value={tweet} onChange={handletextchange}/>
-          {/* <textarea cols="10" rows="1" className="Whh" name="" value={tweet} onChange={handletextchange}></textarea> */}
+          <img src={imageUpload} alt="" />
         </div>
           
     </Stack>
           <hr />
           <div className="postw">
           <br />
-          {/* <PermMediaIcon type="file"></PermMediaIcon> */}
-          {/* <input type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}} className="info" /> */}
-          {/* <input type="file" class="btn btn-outline-primary" /> */}
           <Stack direction="row" alignItems="center" spacing={0}>
-      {/* <Button variant="contained" component="label"> */}
-        
-        {/* <input hidden accept="image/*" multiple type="file" /> */}
-      {/* </Button> */}
       <IconButton color="primary" aria-label="upload picture" component="label" onChange={(event)=>{setImageUpload(event.target.files[0])}}>
         <input hidden accept="image/*" type="file" onChange={(event)=>{setImageUpload(event.target.files[0])}}/>
         <PhotoCamera className='camera'/>
@@ -561,6 +561,7 @@ setTweet("");
       </div>
       
       <div className="Trends">
+      <TotalUsers></TotalUsers>
         <Trends></Trends>
       </div>
     </div>

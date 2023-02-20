@@ -28,7 +28,7 @@ import {Link} from 'react-router-dom'
 import TotalUsers from './TotalUsers';
 // import { ref, set, get, update, remove, child } from 'firebase/database'
 import { getDatabase, ref, child, get } from "firebase/database";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 const dbRef = ref(getDatabase());
 let ID = localStorage.getItem("id")
 function PersonalMy(props) {
@@ -51,7 +51,9 @@ const handleClose = () => {
     fullName:"",
     imageUrl:"",
     username:"",
-    bio:""
+    bio:"",
+    following:"",
+    followers:"",
   })
   const [myTweets,setMyTweets] = useState({
     Tweets:"",
@@ -72,26 +74,31 @@ const handleClose = () => {
       alert("data not received")
     });
   }
+  useEffect(() => {
+    getweets()
+    
+  },[]);
 
-  getweets()
+
     function Getdata(){
     
     
     get(child(dbRef, `user/${ID}`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        // alert("data received")
-        // console.log(snapshot.val());
+        
         var obj = {
           contactNumber:snapshot.val().contactNumber,
           email:snapshot.val().email,
           fullName:snapshot.val().fullName,
           imageUrl:snapshot.val().imageUrl,
           username:snapshot.val().username,
-          bio:snapshot.val().bio
+          bio:snapshot.val().bio,
+          following:snapshot.val().following,
+          followers:snapshot.val().followers,
         }
         setMyObject(obj)
-        // console.log(obj);
+        console.log(obj.following.length);
       } else {
         console.log("No data available");
       }
@@ -99,8 +106,10 @@ const handleClose = () => {
       console.error(error);
       alert("data not received")
     });}
+useEffect(()=>{
 
-    Getdata()
+  Getdata()
+},[])
     var person = document.getElementById("whidd")
     const navigate = useNavigate();
 
@@ -192,7 +201,7 @@ const handleClose = () => {
               
             <Box className="d-flex topsec">
                 <ArrowBackIcon onClick={back} className="fs-3 mt-2"></ArrowBackIcon>
-                <h1 className="username"><p className='mt-3 fs-4 font-monospace'>{myObject.fullName}</p></h1>
+                <h1 className="username"><p className='mt-2 fs-4'>{myObject.fullName}</p></h1>
             </Box>
             <Box>
               <Box className='bigpro'>
@@ -203,7 +212,7 @@ const handleClose = () => {
           src={myObject.imageUrl}
           alt="profile avatar"
         />
-        {/* <button className='ediban' setmodal={setmodal}> Edit Profile</button> */}
+        
         <button className="ediban fs-6  rounded-pill"onClick={()=>setmodal(true)} setmodal={setmodal}>Edit Profile</button>
         {/* <button className='bg-info text-white border border-info-subtle rounded-pill ediban'onClick={()=>setmodal(true)} setmodal={setmodal}>Edit Profile</button> */}
       {modal == true &&(
@@ -216,6 +225,10 @@ const handleClose = () => {
             <h1 className="username"><p className='mt-3 fs-4 font-monospace'>{myObject.fullName}</p></h1>
             <h1 className="username ateh"><p className='  fs-6 '>@{myObject.username}</p></h1>
             <h1 className="username "><p className='  fs-6 '>{myObject.bio}</p></h1>
+            <Box className="d-flex heica">
+            <h1 className="username "><p className='  fs-6 '>{myObject.following.length}Following</p></h1>
+            <h1 className="username "><p className='  fs-6 '>{myObject.followers.length}Followers</p></h1>
+            </Box>
             </Box>
             <hr />
             <Box>
@@ -231,16 +244,25 @@ const handleClose = () => {
           <div className="feedss">
           <img className="Ppic avatar"  onClick={allass} sx={{ fontSize: 50 }} src={myObject.imageUrl} ></img>
           {/* <p className='fnh mt-3 fs-4 font-monospace '>{props.name ? ` ${props.name}` : ""}</p> */}
-          <p className='fnh mt-3 fs-4 font-monospace '>{myObject.fullName}</p>
+          <p className='fnh fs-4 '>{myObject.fullName}</p>
           {/* <VerifiedIcon></VerifiedIcon> */}
-          <p className="fem">@{myObject.username}</p>
+          {/* <p className="fem">@{myObject.username}</p> */}
           {/* <p className="fem">@{props.name ? ` ${props.name}` : ""}</p> */}
         </div>
           <p className="fem">{value.Tweets}</p>
         <div>
 
+        {value.url && 
+          (
+            <>
           <img src={value.url} alt="Tweet Image" className="tweetimg " />
 
+          
+
+          </>
+          )
+        }
+<hr />
           {/* <p>{myObject.Tweets}</p> */}
           {/* <img src={Following} alt="" className="tweetimg" /> */}
          

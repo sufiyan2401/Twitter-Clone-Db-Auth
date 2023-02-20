@@ -3,18 +3,17 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import './Mainpg.css'
 import './App.css'
-// Firebase
-// import React, { useState } from "react";
+import OutlinedInput from '@mui/material/OutlinedInput';
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { storage } from './firebase';
-// import InputControl from "../InputControl/InputControl";
 import { auth } from "./firebase";
 import styles from "../src/components/Signup/Signup.module.css";
 import { getDatabase, ref, set, push } from "firebase/database";
+import LinearProgress from '@mui/material/LinearProgress';
+
 import { uploadBytes, ref as storageRef, getDownloadURL } from 'firebase/storage';
-// Firebase
 import Input from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
@@ -26,6 +25,8 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Stack from '@mui/material/Stack';
 import { InputLabel } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
+import CircularProgress from '@mui/material/CircularProgress';
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -43,7 +44,16 @@ const style = {
 };
 
 function MainPg(url) {
-  
+  const [circle , setCircle] = useState(false)
+//   useEffect(()=>{
+// setCircle(true)
+// setTimeout(()=>{
+// setCircle(false)
+// },5000)
+//   },[])
+function fetse(){
+  setCircle(true)
+}
   const [showPassword, setShowPassword] = React.useState(false);
   const [imageUpload, setImageUpload] = useState(null);
   const navigate = useNavigate();
@@ -69,10 +79,19 @@ function MainPg(url) {
     setSubmitButtonDisabled(true);
     signInWithEmailAndPassword(auth, Loginvalues.email, Loginvalues.pass)
       .then(async (success) => {
-        setSubmitButtonDisabled(false);
-        let fullid =(success.user.uid)
-        let id = localStorage.setItem("id",fullid)
-        navigate("/Home");
+        setCircle(true)
+        setTimeout(()=>{
+
+          setSubmitButtonDisabled(false);
+          let fullid =(success.user.uid)
+          
+            // setTimeout(()=>{
+            // setCircle(false)
+            // },5000)
+              
+          let id = localStorage.setItem("id",fullid)
+          navigate("/Home");
+        },2000)
       })
       .catch((err) => {
         setSubmitButtonDisabled(false);
@@ -97,14 +116,22 @@ function MainPg(url) {
     setSubmitButtonDisabled(true);
     createUserWithEmailAndPassword(auth, values.email, values.pass)
       .then(async (success) => {
-        // navigate("/login");
-        handleClose();
-        LoginOpen()
-        console.log(success.user.uid)
+        setCircle(true)
         setSubmitButtonDisabled(false);
+        
+        setTimeout(()=>{
+
+          handleClose();
+          LoginOpen()
+          
+        },5000)
+        let uasd = (success.user.uid)
+          
+        setCircle(false)
         const user = success.user;
         await updateProfile(user, {
           displayName: values.name
+          
         });
         //       const db = getDatabase();
         //   push(ref(db, `${props.name}`), {
@@ -114,9 +141,11 @@ function MainPg(url) {
         // }
         const db = getDatabase();
         set(ref(db, `user/${success.user.uid}`), {
+          id: uasd ,
           username: values.name,
           email: values.email,
-          // password:values.password,
+          followers: JSON.stringify([]),
+          following: JSON.stringify([]),
           contactNumber: values.ContactNumber,
           fullName: values.FullName,
           imageUrl: url,
@@ -163,8 +192,11 @@ function MainPg(url) {
   };
 
   return (
-    
         <div className="container d-flex justify-content-evenly">
+          {/* {circle? 
+          <CircularProgress disableShrink />
+          :""
+          } */}
     <div className="image">
       <svg viewBox="0 0 24 24" aria-hidden="true" className="big-bird">
         <g>
@@ -183,13 +215,14 @@ function MainPg(url) {
           </path>
         </g>
       </svg>
-
+ 
       <h1 className="MainHapen">Happening now</h1>
       <h3 className="Join">Join Twitter today.</h3>
 
       <div className="button ">
       <React.Fragment>
         <a href="#" className="btn btn-signup" onClick={handleOpen}>Sign up</a>
+        
         <Modal
         className="Moboc"
         hideBackdrop
@@ -199,7 +232,11 @@ function MainPg(url) {
         aria-describedby="child-modal-description"
        >
         <Box sx={{ ...style, width: 700  }} className="modalbox bg-dark">
-          
+        {circle? 
+      <Box sx={{ width: '100%' }}>
+      <LinearProgress />
+    </Box>:""
+          }
           <h1 onClick={handleClose} className="clodebtn "  >X</h1>
           <h1 className="CreateAccHead"> Create Your Acount</h1>
             <Box className="MainInpFields"
@@ -223,6 +260,7 @@ function MainPg(url) {
           }/>
 
           {/* <InputLabel htmlFor="standard-adornment-password" className="inpfieldsig bg-dark text-light" >Password</InputLabel> */}
+          {/* Password */}
       <FormControl sx={{ m: 1,  }} >
           <Input
           id="inputField"
@@ -245,17 +283,13 @@ function MainPg(url) {
             }
           />
         </FormControl>
-        {/* <InputLabel htmlFor="standard-adornment-password" className="inpfieldsig bg-dark text-light" >Full Name</InputLabel> */}
+        
       <input type="text" id="inputField" placeholder="Full Name" className='bg-dark' value={values.FullName} onChange={(event) =>
             setValues((prev) => ({ ...prev, FullName: event.target.value }))
           }/>
-        {/* <InputLabel htmlFor="standard-adornment-password" className="inpfieldsig bg-dark text-light" >Contact No</InputLabel> */}
       <input type="Number" id="inputField" placeholder="Contact Number" className='bg-dark'  value={values.ContactNumber}  onChange={(event) =>
             setValues((prev) => ({ ...prev, ContactNumber: event.target.value }))
           } />
-      {/* <TextField id="filled-basic" label="Filled" variant="filled" />
-      <TextField id="standard-basic" label="Standard" variant="standard" /> */}
-        
         <Stack direction="row" alignItems="center" spacing={2}>
       <Button variant="contained" component="label">
       Upload Your Profile Pic
@@ -273,6 +307,13 @@ function MainPg(url) {
       <Button variant="contained" endIcon={<PersonIcon />}  onClick={imageUploading} disabled={submitButtonDisabled}>
         Sign Up
       </Button>
+      {circle? 
+      <Box className="loadersd">
+        <CircularProgress className="heal" />
+      </Box>:""
+          }
+          
+     
     </Stack>
         </Box>
         
@@ -289,8 +330,13 @@ function MainPg(url) {
         aria-labelledby="child-modal-title"
         aria-describedby="child-modal-description"
        >
+        
         <Box sx={{ ...style, width: 700  }} className="modalbox bg-dark">
-          
+        {circle? 
+      <Box sx={{ width: '100%' }}>
+      <LinearProgress />
+    </Box>:""
+          }
           <h1 onClick={LoginClose} className="clodebtn "  >X</h1>
           <h1 className="CreateAccHead"> Login Your Acount</h1>
             <Box className="MainInpFields"
@@ -309,6 +355,11 @@ function MainPg(url) {
             setValues((prev) => ({ ...prev, name: event.target.value }))}/> */}
 
       {/* <InputLabel htmlFor="standard-adornment-password" className="inpfieldsig bg-dark text-light" >Email</InputLabel> */}
+      {/* {circle? 
+      <Box sx={{ width: '100%' }}>
+      <LinearProgress />
+    </Box>:""
+          } */}
       <InputLabel htmlFor="standard-adornment-password" className="inpfieldsig bg-dark text-light" > Email</InputLabel>
       <input type="text" id="inputField" placeholder="Email" className='bg-dark'  onChange={(event) =>
             setLoginValues((prev) => ({ ...prev, email: event.target.value }))
@@ -346,6 +397,11 @@ function MainPg(url) {
       <Button variant="contained" endIcon={<PersonIcon />}  onClick={handleSubmission} disabled={submitButtonDisabled}>
         Sign In
       </Button>
+      {circle? 
+      <Box className="loadersd">
+        <CircularProgress className="heal" />
+      </Box>:""
+          }
     </Stack>
         </Box>
         

@@ -8,11 +8,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import DirectionsIcon from '@mui/icons-material/Directions';
 import {React,useEffect,useState} from 'react'
-import './App.css'
+import '../../Styles/Index.css'
 
 import { getDatabase, ref, child, get , update , push, set } from "firebase/database";
 
-function TotalUsers() {
+function UserCalculator() {
   let ID = localStorage.getItem("id")
   const [buttondisable,setButtondisable] = useState(false)
   const [folo,setFolo] = useState([])
@@ -208,4 +208,4 @@ update(ref(db, `user/${ID}`), {
     
 }
 
-export default TotalUsers
+export default UserCalculator

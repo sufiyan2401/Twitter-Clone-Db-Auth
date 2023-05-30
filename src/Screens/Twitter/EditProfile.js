@@ -4,8 +4,8 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 import {React,useEffect,useState} from 'react'
 import { uploadBytes,ref as storageRef , getDownloadURL} from 'firebase/storage';
-import {storage} from './firebase'
-import './App.css'
+import {storage} from '../../config/firebase'
+import '../../Styles/Index.css'
 
 import { getDatabase, ref, child, get , update , push, set } from "firebase/database";
 function EditProfile({setmodal}) {

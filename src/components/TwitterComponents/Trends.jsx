@@ -1,5 +1,5 @@
 import React from 'react'
-import './App.css';
+import '../../Styles/Index.css'
 
 function Trends() {
     return (

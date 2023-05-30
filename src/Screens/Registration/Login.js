@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react'
-// import Button from 'react-bootstrap/Button';
-// import Form from 'react-bootstrap/Form';
-// import { createUserWithEmailAndPassword } from "firebase/auth";
-// import {auth,db} from "../../config/firebase"
-// import {doc, setDoc } from 'firebase/firestore'
-// import Error from '../error'
-import { useNavigate } from 'react-router-dom';
-import './App.css';
-import styles from './App.css';
-import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "./firebase";
 
-import signu from './Signup.jpeg'
+import { useNavigate } from 'react-router-dom';
+
+import styles from '../../Styles/Index.css'
+import '../../Styles/Index.css'
+import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from '../../config/firebase'
+
+// import signu from './Signup.jpeg'
 import Box from '@mui/material/Box';
-import twitter from './twitter'
+import TwitterF from '../Twitter/TwitterF';
+// import twitter from './twitter'
 // import { link, useNavigate } from 'react-router-dom'
 import TextField from '@mui/material/TextField';
 
@@ -41,7 +38,7 @@ function Login() {
                 console.log(res.user.uid)
                 // console.log(success.user,uid)
                 setSubmitButtonDisabled(false);
-                
+
 
                 navigate("/Home");
 
@@ -50,7 +47,7 @@ function Login() {
                 setSubmitButtonDisabled(false);
                 setErrorMsg(err.message);
                 console.log(err)
-                alert("error" +  err)
+                alert("error" + err)
             });
     };
 
@@ -69,25 +66,25 @@ function Login() {
                             <br />
                             <br />
                             <Box className="mt-1 font-monospace">
-                            {/* <TextField id="filled-basic" label="Filled" variant="filled" /> */}
-                            
-                            
-                            <input type="text" name="" id="" placeholder="Email" className="sifield form-control form-control-lg" onChange={(event) =>
-                                setValues((prev) => ({ ...prev, email: event.target.value }))
-                            }
-                            />
-                            <br />
-                            
-                            <input type="text" name="" id="" placeholder="Password" className="sifield form-control form-control-lg" onChange={(event) =>
-                                setValues((prev) => ({ ...prev, pass: event.target.value }))
-                            }
-                            />
+                                {/* <TextField id="filled-basic" label="Filled" variant="filled" /> */}
+
+
+                                <input type="text" name="" id="" placeholder="Email" className="sifield form-control form-control-lg" onChange={(event) =>
+                                    setValues((prev) => ({ ...prev, email: event.target.value }))
+                                }
+                                />
+                                <br />
+
+                                <input type="text" name="" id="" placeholder="Password" className="sifield form-control form-control-lg" onChange={(event) =>
+                                    setValues((prev) => ({ ...prev, pass: event.target.value }))
+                                }
+                                />
                             </Box>
                         </Box>
                         <br />
                         <br />
                         <br />
-                        
+
                         <button onClick={handleSubmission} disabled={submitButtonDisabled} className="sihe fnfb">Signup Here ! </button>
 
 
@@ -106,7 +103,7 @@ function Login() {
 
 
 
-  
+
 }
 
 

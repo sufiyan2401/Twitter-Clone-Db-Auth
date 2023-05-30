@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { storage } from '../../firebase';
+import { storage } from "../../config/firebase";
 import InputControl from "../InputControl/InputControl";
-import { auth } from "../../firebase";
+import { auth } from "../../config/firebase";
 import styles from "./Signup.module.css";
 import { getDatabase, ref, set, push } from "firebase/database";
 import { uploadBytes, ref as storageRef, getDownloadURL } from 'firebase/storage';

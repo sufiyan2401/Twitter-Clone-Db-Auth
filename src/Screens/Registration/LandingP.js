@@ -25,6 +25,7 @@ import Stack from '@mui/material/Stack';
 import { InputLabel } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Post } from '../../config/ApiMethods';
 
 const style = {
     position: 'absolute',
@@ -42,14 +43,9 @@ const style = {
 
 };
 
-function LandingP(url) {
+function LandingP() {
     const [circle, setCircle] = useState(false)
-    //   useEffect(()=>{
-    // setCircle(true)
-    // setTimeout(()=>{
-    // setCircle(false)
-    // },5000)
-    //   },[])
+    const [loader, setLoader] = useState(false)
     function fetse() {
         setCircle(true)
     }
@@ -57,117 +53,167 @@ function LandingP(url) {
     const [imageUpload, setImageUpload] = useState(null);
     const navigate = useNavigate();
     const [Loginvalues, setLoginValues] = useState({
-        email: "",
-        pass: "",
+        // email: "",
+        // pass: "",
     });
     const [values, setValues] = useState({
-        name: "",
-        email: "",
-        pass: "",
+
     });
     const [errorMsg, setErrorMsg] = useState("");
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
     const [tweet, setTweet] = useState("");
     const handleSubmission = () => {
-        if (!Loginvalues.email || !Loginvalues.pass) {
-            setErrorMsg("Fill all fields");
-            return;
+        console.log(Loginvalues)
+        try {
+            Post('/user/login', Loginvalues)
+            
+                .then(res => {
+                    console.log(res)
+                    const userinfo = res.data.data
+                    let id = localStorage.setItem('id', res.data.data._id);
+                    console.log(id, "locals")
+
+
+                    navigate("/Home", {
+                        state: {
+
+                            userData: userinfo
+
+                        }
+                    });
+                }).catch(e => {
+                    console.log(e)
+                })
+        } catch (e) {
+            console.log(e)
         }
-        setErrorMsg("");
+        // if (!Loginvalues.email || !Loginvalues.pass) {
+        //     setErrorMsg("Fill all fields");
+        //     return;
+        // }
+        // setErrorMsg("");
 
-        setSubmitButtonDisabled(true);
-        signInWithEmailAndPassword(auth, Loginvalues.email, Loginvalues.pass)
-            .then(async (success) => {
-                setCircle(true)
-                setTimeout(() => {
+        // setSubmitButtonDisabled(true);
+        // signInWithEmailAndPassword(auth, Loginvalues.email, Loginvalues.pass)
+        //     .then(async (success) => {
+        //         setCircle(true)
+        //         setTimeout(() => {
 
-                    setSubmitButtonDisabled(false);
-                    let fullid = (success.user.uid)
+        //             setSubmitButtonDisabled(false);
+        //             let fullid = (success.user.uid)
 
-                    // setTimeout(()=>{
-                    // setCircle(false)
-                    // },5000)
+        //             // setTimeout(()=>{
+        //             // setCircle(false)
+        //             // },5000)
 
-                    let id = localStorage.setItem("id", fullid)
-                    navigate("/Home");
-                }, 2000)
-            })
-            .catch((err) => {
-                setSubmitButtonDisabled(false);
-                setErrorMsg(err.message);
-            });
+        //             let id = localStorage.setItem("id", fullid)
+        //             navigate("/Home");
+        //         }, 2000)
+        //     })
+        //     .catch((err) => {
+        //         setSubmitButtonDisabled(false);
+        //         setErrorMsg(err.message);
+        //     });
     };
     const imageUploading = async () => {
-
         let imageUrl = "";
         if (imageUpload == null) { return }
-        else {
-            const imageRef = storageRef(storage, `images/${imageUpload.name}`)
-            if (!values.name || !values.email || !values.pass) {
-                setErrorMsg("Fill all fields");
-                return;
-            }
-            uploadBytes(imageRef, imageUpload).then((snapshot) => {
-                getDownloadURL(storageRef(storage, `images/${imageUpload.name}`))
-                    .then((url) => {
-                        console.log(url)
-                        setErrorMsg("");
-                        setSubmitButtonDisabled(true);
-                        createUserWithEmailAndPassword(auth, values.email, values.pass)
-                            .then(async (success) => {
-                                setCircle(true)
-                                setSubmitButtonDisabled(false);
-
-                                setTimeout(() => {
-
-                                    handleClose();
-                                    LoginOpen()
-
-                                }, 5000)
-                                let uasd = (success.user.uid)
-
-                                setCircle(false)
-                                const user = success.user;
-                                await updateProfile(user, {
-                                    displayName: values.name
-
-                                });
-                                //       const db = getDatabase();
-                                //   push(ref(db, `${props.name}`), {
-                                //     username: tweet,
-                                //   });
-                                //   alert("Your Tweet Has Been Sended")
-                                // }
-                                const db = getDatabase();
-                                set(ref(db, `user/${success.user.uid}`), {
-                                    id: uasd,
-                                    username: values.name,
-                                    email: values.email,
-                                    followers: JSON.stringify([]),
-                                    following: JSON.stringify([]),
-                                    contactNumber: values.ContactNumber,
-                                    fullName: values.FullName,
-                                    imageUrl: url,
-                                });
-                                alert("Your Acc Is Created Plz Login Here ")
-
-                                // handletextchange();
+        const imageRef = storageRef(storage, `images/${imageUpload.name}`)
+        uploadBytes(imageRef, imageUpload).then((snapshot) => {
+            getDownloadURL(storageRef(storage, `images/${imageUpload.name}`))
+                .then((url) => {
+                    imageUrl = url;
+                    console.log(imageUrl)
+                    const temp = {
+                        userName: values.userName,
+                        email: values.email,
+                        password: values.password,
+                        fullname: values.fullname,
+                        contactnum: values.fullname,
+                        profilepic: imageUrl
+                    }
+                    console.log("userinfo", temp)
+                    try {
+                        setLoader(true)
+                        Post('/user/signup', temp)
+                            .then(res => {
+                                console.log(res)
+                            }).catch(e => {
+                                console.log(e)
                             })
-                            .catch((err) => {
-                                setSubmitButtonDisabled(false);
-                                setErrorMsg(err.message);
-                            });
+                    } catch (e) {
+                        console.log(e)
+                        setLoader(false)
+                    }
+                    // setImage(imageUrl)
+                })
+        })
+        console.log(values)
 
-                    })
-                    .catch((error) => {
-                        // Handle any errors
-                    });
+        // let imageUrl = "";
+        // if (imageUpload == null) { return }
+        // else {
+        //     const imageRef = storageRef(storage, `images/${imageUpload.name}`)
+        //     if (!values.name || !values.email || !values.pass) {
+        //         setErrorMsg("Fill all fields");
+        //         return;
+        //     }
+        //     uploadBytes(imageRef, imageUpload).then((snapshot) => {
+        //         getDownloadURL(storageRef(storage, `images/${imageUpload.name}`))
+        //             .then((url) => {
+        //                 console.log(url)
+        //                 setErrorMsg("");
+        //                 setSubmitButtonDisabled(true);
+        //                 createUserWithEmailAndPassword(auth, values.email, values.pass)
+        //                     .then(async (success) => {
+        //                         setCircle(true)
+        //                         setSubmitButtonDisabled(false);
 
-                console.log(snapshot)
-                // alert("Image Uploaded")
+        //                         setTimeout(() => {
 
-            })
-        }
+        //                             handleClose();
+        //                             LoginOpen()
+
+        //                         }, 5000)
+        //                         let uasd = (success.user.uid)
+
+        //                         setCircle(false)
+        //                         const user = success.user;
+        //                         await updateProfile(user, {
+        //                             displayName: values.name
+
+        //                         });
+        //                         const db = getDatabase();
+        //                         set(ref(db, `user/${success.user.uid}`), {
+        //                             id: uasd,
+        //                             username: values.name,
+        //                             email: values.email,
+        //                             followers: JSON.stringify([]),
+        //                             following: JSON.stringify([]),
+        //                             contactNumber: values.ContactNumber,
+        //                             fullName: values.FullName,
+        //                             imageUrl: url,
+        //                         });
+        //                         alert("Your Acc Is Created Plz Login Here ")
+
+        //                         // handletextchange();
+        //                     })
+        //                     .catch((err) => {
+        //                         setSubmitButtonDisabled(false);
+        //                         setErrorMsg(err.message);
+        //                     });
+
+        //             })
+        //             .catch((error) => {
+        //                 // Handle any errors
+        //             });
+
+        //         console.log(snapshot)
+        //         // alert("Image Uploaded")
+
+        //     })
+        // }
+
     }
     const handletextchange = (e) => {
         setTweet(e.target.value)
@@ -252,22 +298,21 @@ function LandingP(url) {
                                     {/* <InputLabel htmlFor="standard-adornment-password" className="inpfieldsig bg-dark text-light" >Name</InputLabel> */}
                                     <input type="text" id="inputField" placeholder="Name" className='bg-dark' value={values.name}
                                         onChange={(event) =>
-                                            setValues((prev) => ({ ...prev, name: event.target.value }))} />
+                                            setValues((prev) => ({ ...prev, userName: event.target.value }))} />
 
                                     {/* <InputLabel htmlFor="standard-adornment-password" className="inpfieldsig bg-dark text-light" >Email</InputLabel> */}
-                                    <input type="text" id="inputField" placeholder="Email" className='bg-dark' value={values.email} onChange={(event) =>
+                                    <input type="text" id="inputField" placeholder="Email" className='bg-dark' disabled={loader} value={values.email} onChange={(event) =>
                                         setValues((prev) => ({ ...prev, email: event.target.value }))
                                     } />
 
-                                    {/* <InputLabel htmlFor="standard-adornment-password" className="inpfieldsig bg-dark text-light" >Password</InputLabel> */}
-                                    {/* Password */}
                                     <FormControl sx={{ m: 1, }} >
                                         <Input
                                             id="inputField"
+                                            disabled={loader}
                                             className="Passty"
                                             placeholder='Password'
                                             onChange={(event) =>
-                                                setValues((prev) => ({ ...prev, pass: event.target.value }))
+                                                setValues((prev) => ({ ...prev, password: event.target.value }))
                                             }
                                             type={showPassword ? 'text' : 'password'}
                                             endAdornment={
@@ -284,13 +329,13 @@ function LandingP(url) {
                                         />
                                     </FormControl>
 
-                                    <input type="text" id="inputField" placeholder="Full Name" className='bg-dark' value={values.FullName} onChange={(event) =>
-                                        setValues((prev) => ({ ...prev, FullName: event.target.value }))
+                                    <input type="text" id="inputField" placeholder="Full Name" className='bg-dark' value={values.FullName} disabled={loader} onChange={(event) =>
+                                        setValues((prev) => ({ ...prev, fullname: event.target.value }))
                                     } />
-                                    <input type="Number" id="inputField" placeholder="Contact Number" className='bg-dark' value={values.ContactNumber} onChange={(event) =>
-                                        setValues((prev) => ({ ...prev, ContactNumber: event.target.value }))
+                                    <input type="Number" id="inputField" placeholder="Contact Number" className='bg-dark' disabled={loader} value={values.ContactNumber} onChange={(event) =>
+                                        setValues((prev) => ({ ...prev, contactnum: event.target.value }))
                                     } />
-                                    <Stack direction="row" alignItems="center" spacing={2}>
+                                    <Stack direction="row" alignItems="center" spacing={2} disabled={loader}>
                                         <Button variant="contained" component="label">
                                             Upload Your Profile Pic
                                             <input hidden accept="image/*" multiple type="file" onChange={(event) => { setImageUpload(event.target.files[0]) }} />
@@ -372,7 +417,7 @@ function LandingP(url) {
                                             className="Passty"
                                             placeholder='Password'
                                             onChange={(event) =>
-                                                setLoginValues((prev) => ({ ...prev, pass: event.target.value }))
+                                                setLoginValues((prev) => ({ ...prev, password: event.target.value }))
                                             }
                                             type={showPassword ? 'text' : 'password'}
                                             endAdornment={

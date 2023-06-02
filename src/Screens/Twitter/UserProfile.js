@@ -29,10 +29,15 @@ import Trends from '../../components/TwitterComponents/Trends';
 // import { ref, set, get, update, remove, child } from 'firebase/database'
 import { getDatabase, ref, child, get } from "firebase/database";
 import { useEffect, useState } from 'react';
+import { GetById } from '../../config/ApiMethods';
+import axios from 'axios';
+import usersapi from '../../config/config';
 const dbRef = ref(getDatabase());
 let ID = localStorage.getItem("id")
 function UserProfile(props) {
+    console.log("ID", ID)
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
     function seeprofile() {
         navigate("/editprofile")
     }
@@ -59,7 +64,23 @@ function UserProfile(props) {
         Tweets: "",
 
     })
+    const [apidata, setApiData] = useState({})
     const [modal, setmodal] = useState(false)
+    const getuserinfo = async () => {
+        try {
+            const response = await axios.get(`${usersapi}/${ID}`);
+            const user = response.data;
+            console.log(user.data);
+            setApiData(user.data)
+            // Do something with the user data
+        } catch (error) {
+            console.error(error);
+            // Handle the error
+        }
+    }
+    useEffect(() => {
+        getuserinfo();
+    }, [])
     const getweets = () => {
         get(child(dbRef, `Tweets/${ID}`)).then((snapshot) => {
             if (snapshot.exists()) {
@@ -71,11 +92,11 @@ function UserProfile(props) {
             }
         }).catch((error) => {
             console.error(error);
-            alert("data not received")
+            // alert("data not received")
         });
     }
     useEffect(() => {
-        getweets()
+        // getweets()
 
     }, []);
 
@@ -104,12 +125,12 @@ function UserProfile(props) {
                 }
             }).catch((error) => {
                 console.error(error);
-                alert("data not received")
+                // alert("data not received")
             });
     }
     useEffect(() => {
 
-        Getdata()
+        // Getdata()
     }, [])
     var person = document.getElementById("whidd")
     const navigate = useNavigate();
@@ -134,7 +155,7 @@ function UserProfile(props) {
             alert("Sign-out successful.")
             // Navigate("/login")
         }).catch((error) => {
-            alert(error)
+            // alert(error)
         });
 
     }
@@ -202,7 +223,7 @@ function UserProfile(props) {
 
                 <Box className="d-flex topsec">
                     <ArrowBackIcon onClick={back} className="fs-3 mt-2"></ArrowBackIcon>
-                    <h1 className="username"><p className='mt-2 fs-4'>{myObject.fullName}</p></h1>
+                    <h1 className="username"><p className='mt-2 fs-4'>{apidata.fullname}</p></h1>
                 </Box>
                 <Box>
                     <Box className='bigpro'>
@@ -210,7 +231,7 @@ function UserProfile(props) {
                             <img
                                 className="avatar iapia"
                                 // src="https://picsum.photos/200"
-                                src={myObject.imageUrl}
+                                src={apidata.profilepic}
                                 alt="profile avatar"
                             />
 
@@ -223,8 +244,8 @@ function UserProfile(props) {
                     </Box>
                 </Box>
                 <Box className="mainan">
-                    <h1 className="username"><p className='mt-3 fs-4 font-monospace'>{myObject.fullName}</p></h1>
-                    <h1 className="username ateh"><p className='  fs-6 '>@{myObject.username}</p></h1>
+                    <h1 className="username"><p className='mt-3 fs-4 font-monospace'>{apidata.fullname}</p></h1>
+                    <h1 className="username ateh"><p className='  fs-6 '>@{apidata.userName}</p></h1>
                     <h1 className="username "><p className='  fs-6 '>{myObject.bio}</p></h1>
                     <Box className="d-flex heica">
                         <h1 className="username "><p className='  fs-6 '>{myObject.following.length}Following</p></h1>

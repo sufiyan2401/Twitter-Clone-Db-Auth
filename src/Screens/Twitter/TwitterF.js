@@ -21,7 +21,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import BallotIcon from '@mui/icons-material/Ballot';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import twee from '../../Assets/Image/tweet.jpg'
 
 import Button from '@mui/material/Button';
@@ -46,6 +46,9 @@ import { uploadBytes, ref as storageRef, getDownloadURL } from 'firebase/storage
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { Get, GetById, Post } from '../../config/ApiMethods';
+import axios from 'axios';
+import usersapi from '../../config/config';
 
 const style = {
 
@@ -53,24 +56,46 @@ const style = {
     p: 4,
 };
 
-function TwitterF(props) {
+function TwitterF({ route, navigation }) {
     const [sended, setSended] = useState("")
     const [likes, setLikes] = useState(0);
+    const [imageurl, setImageUrl] = useState("")
     const [brd, setBrd] = useState(false)
     const [isLiked, setIsLiked] = useState(false);
     const [imagePreview, setImagePreview] = useState("");
     const [tweeturl, setTweetUrl] = useState("")
+    const [apidata, setApiData] = useState({})
     const [mywork, setMyWork] = useState("")
     const [open, setOpen] = React.useState(false);
     const mOpen = () => setOpen(true);
     const mClose = () => setOpen(false);
+    let ID = localStorage.getItem("id")
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [score, setScore] = useState(0);
-    const handleLike = (value) => {
-
-    };
+    const { state } = useLocation();
+    // const { userData } = state; // Read values passed on state
+    // const currentuserid = userData._id
+    // console.log(userData._id)
     const [milliseconds, setMilliseconds] = useState(new Date().getTime());
+    const handleLike = () => {
+
+    }
+    const getuserinfo = async () => {
+        try {
+            const response = await axios.get(`${usersapi}/${ID}`);
+            const user = response.data;
+            console.log(user.data);
+            setApiData(user.data)
+            // Do something with the user data
+        } catch (error) {
+            console.error(error);
+            // Handle the error
+        }
+    }
+    useEffect(() => {
+        getuserinfo();
+    }, [])
     useEffect(() => {
         const intervalId = setInterval(() => {
             setMilliseconds(new Date().getTime());
@@ -83,6 +108,13 @@ function TwitterF(props) {
         setSidebarOpen(true);
     };
 
+    const getuserinfobyid = async () => {
+        console.log("ID", ID)
+    }
+    useEffect(() => {
+        getuserinfobyid()
+
+    }, [])
 
 
     const handleClose = () => {
@@ -90,12 +122,14 @@ function TwitterF(props) {
     };
 
     const navigate = useNavigate();
-    let ID = localStorage.getItem("id")
+    // let ID = localStorage.getItem("")
     // console.log(ID)
     const dbRef = ref(getDatabase());
     const [tester, setTeseter] = useState(null)
     const [imageUpload, setImageUpload] = useState(null);
     const [tweet, setTweet] = useState("");
+    const [lodd, setLodd] = useState(false)
+    const [alltweet, setAllTweet] = useState([])
     const handletextchange = (e) => {
 
         setTweet(e.target.value)
@@ -143,40 +177,51 @@ function TwitterF(props) {
             }
         }).catch((error) => {
             console.error(error);
-            alert("data not received")
+            // alert("data not received")
         });
     }
 
     // useEffect(() => {
-    getweets()
+    // getweets()
     // },[])
     function Getdata() {
-        get(child(dbRef, `user/${ID}`))
-            .then((snapshot) => {
-                if (snapshot.exists()) {
-                    // alert("data received")
-                    // console.log(snapshot.val());
-                    var obj = {
-                        contactNumber: snapshot.val().contactNumber,
-                        email: snapshot.val().email,
-                        fullName: snapshot.val().fullName,
-                        imageUrl: snapshot.val().imageUrl,
-                        username: snapshot.val().username,
-                        likes: snapshot.val().likes
+        Get('/post').then((res) => {
+            console.log(res.data.data)
+            setAllTweet(res.data.data)
+        }).catch((e) => {
+            console.log(e)
+        })
 
-                        // likes:snapshot.val().likes
-                    }
-                    setMyInfo(obj)
-                    // console.log(obj);
-                } else {
-                    console.log("No data available");
-                }
-            }).catch((error) => {
-                console.error(error);
-                // alert("data not received")
-            });
+        // get(child(dbRef, `user/${ID}`))
+        //     .then((snapshot) => {
+        //         if (snapshot.exists()) {
+        //             // alert("data received")
+        //             // console.log(snapshot.val());
+        //             var obj = {
+        //                 contactNumber: snapshot.val().contactNumber,
+        //                 email: snapshot.val().email,
+        //                 fullName: snapshot.val().fullName,
+        //                 imageUrl: snapshot.val().imageUrl,
+        //                 username: snapshot.val().username,
+        //                 likes: snapshot.val().likes
+
+        //                 // likes:snapshot.val().likes
+        //             }
+        //             setMyInfo(obj)
+        //             // console.log(obj);
+        //         } else {
+        //             console.log("No data available");
+        //         }
+        //     }).catch((error) => {
+        //         console.error(error);
+        //         // alert("data not received")
+        //     });
     }
-    Getdata()
+    useEffect(() => {
+        Getdata();
+    }
+        , [])
+    // Getdata()
     function Signout() {
 
         const auth = getAuth();
@@ -189,65 +234,121 @@ function TwitterF(props) {
         });
 
     }
-    function writeUserData() {
-        if (tweet == "") {
-            alert("Tweet Not Be Empty")
-            return
-        }
-        if (imageUpload === null) {
-            const db = getDatabase();
-            push(ref(db, `Tweets/${ID}`), {
-                Tweets: tweet,
-                Time: milliseconds,
-                ProfilePic: myInfo.imageUrl,
-                fullName: myInfo.fullName,
-                likes: likes,
-                // aid:mywork
+    const writeUserData = async () => {
+        try {
+            setLodd(true)
+
+            let url = "";
+            if (imageUpload) {
+                const imageRef = storageRef(storage, `posts/${new Date}`);
+                await uploadBytes(imageRef, imageUpload);
+                url = await getDownloadURL(storageRef(storage, `posts/${imageUpload}`));
+            }
+
+            const tweetdata = {
+                description: tweet,
+                createdBy: apidata.fullname,
+                userProfile: apidata.profilepic,
+                userid: apidata._id
+            };
+
+            if (url) {
+                tweetdata.postImage = url;
+            }
+            Post('/post', tweetdata).then((res) => {
+                console.log("data uploaded", res)
+                setLodd(false)
+            }).catch((e) => {
+                console.log(e)
             })
-                .then(() => {
-                    // alert("tweet sended")
-                    setSended("Tweet Sended Succesfully")
-                    setTweet("");
-                    setTimeout(() => {
-                        setSended("");
-                    }, 2000);
-                }).catch((error) => {
-                    alert("error")
-                })
-        } else {
-            const imageRef = storageRef(storage, `images/${imageUpload}`)
-            uploadBytes(imageRef, imageUpload).then((snapshot) => {
-                getDownloadURL(storageRef(storage, `images/${imageUpload}`))
-                    .then((url) => {
-                        console.log(url)
-                        setTweetUrl(url)
-                        const db = getDatabase();
-                        push(ref(db, `Tweets/${ID}`), {
+            console.log('tweetdata', tweetdata);
 
-                            Tweets: tweet,
-                            Time: milliseconds,
-                            likes: likes,
-                            ProfilePic: myInfo.imageUrl,
-                            fullName: myInfo.fullName,
-                            url: url,
-                            username: myInfo.username,
-                            // aid:mywork
-                        });
-                        setSended("Tweet Sended Succesfully")
-
-                        setTweet("");
-                        setImageUpload(null)
-                        setImagePreview(null)
-                        setTimeout(() => {
-                            setSended("");
-                        }, 4000);
-                    })
-                    .catch((error) => {
-                    });
-
-
-            })
+        } catch (e) {
+            setLodd(false)
+            console.log("error", e)
         }
+
+        // let url = ""
+        // if (imageUpload) {
+        //     // let url = ""
+        //     const imageRef = storageRef(storage, `posts/${imageUpload}`)
+
+
+
+        //     let snapshot = await uploadBytes(imageRef, imageUpload)
+
+        //     url = await getDownloadURL(storageRef(storage, `posts/${imageUpload}`))
+        // }
+
+        // let tweetdata = {
+        //     description: tweet,
+        //     createdBy: apidata.fullname,
+        //     userprofile: apidata.profilepic,
+
+        // }
+        // if (url) {
+        //     tweetdata.postimage = url;
+        // }
+        // console.log('objecttww', tweetdata)
+        // console.log(tweetdata)
+        // if (tweet == "") {
+        //     alert("Tweet Not Be Empty")
+        //     return
+        // }
+        // if (imageUpload === null) {
+        //     const db = getDatabase();
+        //     push(ref(db, `Tweets/${ID}`), {
+        //         Tweets: tweet,
+        //         Time: milliseconds,
+        //         ProfilePic: myInfo.imageUrl,
+        //         fullName: myInfo.fullName,
+        //         likes: likes,
+        //         // aid:mywork
+        //     })
+        //         .then(() => {
+        //             // alert("tweet sended")
+        //             setSended("Tweet Sended Succesfully")
+        //             setTweet("");
+        //             setTimeout(() => {
+        //                 setSended("");
+        //             }, 2000);
+        //         }).catch((error) => {
+        //             alert("error")
+        //         })
+        // } else {
+        //     const imageRef = storageRef(storage, `images/${imageUpload}`)
+        //     uploadBytes(imageRef, imageUpload).then((snapshot) => {
+        //         getDownloadURL(storageRef(storage, `images/${imageUpload}`))
+        //             .then((url) => {
+        //                 console.log(url)
+        //                 setTweetUrl(url)
+        //                 const db = getDatabase();
+        //                 push(ref(db, `Tweets/${ID}`), {
+
+        //                     Tweets: tweet,
+        //                     Time: milliseconds,
+        //                     likes: likes,
+        //                     ProfilePic: myInfo.imageUrl,
+        //                     fullName: myInfo.fullName,
+        //                     url: url,
+        //                     username: myInfo.username,
+        //                     // aid:mywork
+        //                 });
+        //                 setSended("Tweet Sended Succesfully")
+
+        //                 setTweet("");
+        //                 setImageUpload(null)
+        //                 setImagePreview(null)
+        //                 setTimeout(() => {
+        //                     setSended("");
+        //                 }, 4000);
+        //             })
+        //             .catch((error) => {
+        //             });
+
+
+        //     })
+        // }
     }
     var person = document.getElementById("whidd")
 
@@ -274,18 +375,18 @@ function TwitterF(props) {
 
                         {/* <HomeIcon className="ll"></HomeIcon>
             <p className="lt">Home</p> */}
-                        <img className=" avatar " onClick={allass} src={myInfo.imageUrl} />
+                        <img className=" avatar " onClick={allass} src={apidata.profilepic} />
                     </div>
                     <div className="lkf">
 
                         {/* <TagIcon className='link-icon'></
             TagIcon>
             <p className="lt">Explore</p> */}
-                        <p className='fnh mt-3 sidname '>{myInfo.fullName}</p>
+                        <p className='fnh mt-3 sidname '>asdasd</p>
 
                     </div>
                     <div className="lkf">
-                        <p className='fnh  sidusername '>{myInfo.username}</p>
+                        <p className='fnh  sidusername '>{apidata.userName}</p>
                     </div>
 
                     <div className="lkf">
@@ -441,7 +542,7 @@ function TwitterF(props) {
                 <hr />
                 <div className="haper">
 
-                    <img className="PPic avatar maintweetph" onClick={allass} src={myInfo.imageUrl} />
+                    <img className="PPic avatar maintweetph" onClick={allass} src={apidata.profilepic} />
 
                     <textarea cols="50" rows="1" className="Whh" name="" value={tweet} onChange={handletextchange} placeholder="What's Happening..">
                     </textarea>
@@ -466,17 +567,17 @@ function TwitterF(props) {
                     <GifBoxIcon></GifBoxIcon>
                     <BallotIcon></BallotIcon>
                     <CalendarTodayIcon></CalendarTodayIcon>
-                    <button className="tbn" onClick={writeUserData} disabled={!tweet} >Tweet</button>
+                    <button className="tbn" onClick={writeUserData} disabled={!tweet || lodd} >Tweet</button>
                 </div>
                 <Box>
                     <Typography className="text-primary">{sended}</Typography>
                 </Box>
                 <hr className='rts' />
-                <h3 className="totwets">Show {score} Tweets</h3>
+                <h3 className="totwets">Show {alltweet.length} Tweets</h3>
                 <hr />
 
 
-                {myObject.map((value) => {
+                {alltweet.map((value) => {
                     // console.log("tweets",value)
                     return (<>
                         <div className='' >
@@ -484,20 +585,20 @@ function TwitterF(props) {
 
                                 <div className="post-side">
                                     <div className="feedss">
-                                        <img className="Ppic avatar" onClick={allass} sx={{ fontSize: 50 }} src={value.ProfilePic} ></img>
-                                        <p className='fnh mt-2 fs-6 font-monospace '>{value.fullName}</p>
+                                        <img className="Ppic avatar" onClick={allass} sx={{ fontSize: 50 }} src={value.userProfile} ></img>
+                                        <p className='fnh mt-2 fs-6 font-monospace '>{value.createdBy}</p>
                                         {/* <p className="fem fnh mt-2 fs-6 font-monospace fw-lighter">@{value.username}</p> */}
                                     </div>
-                                    <p className="fem">{value.Tweets}</p>
+                                    <p className="fem">{value.description}</p>
                                     <p>{value.likes} likes</p>
                                     <FavoriteBorderIcon style={{ cursor: "pointer" }} onClick={() => handleLike(value)} disabled={isLiked} className="fgeah" />
                                     {/* {isLiked ? "Liked" : "Like"} */}
 
                                     <div>
-                                        {value.url &&
+                                        {value.postImage &&
                                             (
                                                 <>
-                                                    <img src={value.url} alt="Tweet Image" className="tweetimg " />
+                                                    <img src={value.postImage} alt="Tweet Image" className="tweetimg " />
 
 
 

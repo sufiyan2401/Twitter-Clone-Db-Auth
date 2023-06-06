@@ -29,7 +29,7 @@ import Trends from '../../components/TwitterComponents/Trends';
 // import { ref, set, get, update, remove, child } from 'firebase/database'
 import { getDatabase, ref, child, get } from "firebase/database";
 import { useEffect, useState } from 'react';
-import { GetById } from '../../config/ApiMethods';
+import { Get, GetById } from '../../config/ApiMethods';
 import axios from 'axios';
 import usersapi from '../../config/config';
 const dbRef = ref(getDatabase());
@@ -64,6 +64,7 @@ function UserProfile(props) {
         Tweets: "",
 
     })
+    const [alltweet, setAllTweet] = useState([])
     const [apidata, setApiData] = useState({})
     const [modal, setmodal] = useState(false)
     const getuserinfo = async () => {
@@ -82,21 +83,15 @@ function UserProfile(props) {
         getuserinfo();
     }, [])
     const getweets = () => {
-        get(child(dbRef, `Tweets/${ID}`)).then((snapshot) => {
-            if (snapshot.exists()) {
-                // console.log(snapshot.val());
-                setMyTweets(snapshot.val());
-                // alert("data received")
-            } else {
-                console.log("No data available");
-            }
-        }).catch((error) => {
-            console.error(error);
-            // alert("data not received")
-        });
+        Get('/post').then((res) => {
+            console.log(res.data.data)
+            setAllTweet(res.data.data)
+        }).catch((e) => {
+            console.log(e)
+        })
     }
     useEffect(() => {
-        // getweets()
+        getweets()
 
     }, []);
 
@@ -161,11 +156,6 @@ function UserProfile(props) {
     }
     return (
         <div className="Container">
-            {/* <div className="Middles">
-      <MiddleSite></MiddleSite>
-      </div> */}
-            {/* middle site */}
-
             <div className="left-sidebar">
                 <div className="links-flex">
                     <div className="white-logo">
@@ -211,9 +201,6 @@ function UserProfile(props) {
                     <div className="link-flex">
                         <ExitToAppIcon className='link-icon' />
                         <p className="link-text" onClick={Signout}>SignOut</p>
-                        {/* <PersonIcon className='link-icon' onClick={allass}></PersonIcon> */}
-                        {/* <p className='mt-3 fs-4 font-monospace'>{props.name ? ` ${props.name}` : ""}</p> */}
-                        {/* <p className='mt-3 fs-4 font-monospace'>{props.name ? ` ${props.name}` : ""}</p> */}
                     </div>
                 </div>
 
@@ -254,46 +241,41 @@ function UserProfile(props) {
                 </Box>
                 <hr />
                 <Box>
-                    <Typography className="csa">Tweets</Typography>
+                    <Typography className="csa" style={{
+                        fontWeight: 'bolder'
+                    }}>Total Tweets 3
+                    </Typography>
                     <div className='bg-info linepa'></div>
                     <hr />
                 </Box>
                 <Box className="flowi">
-                    {Object.values(myTweets).map((value) => {
-                        // console.log(value)
-                        return (
-                            <>
-                                <div className="feedss">
-                                    <img className="Ppic avatar" onClick={allass} sx={{ fontSize: 50 }} src={myObject.imageUrl} ></img>
-                                    {/* <p className='fnh mt-3 fs-4 font-monospace '>{props.name ? ` ${props.name}` : ""}</p> */}
-                                    <p className='fnh fs-4 '>{myObject.fullName}</p>
-                                    {/* <VerifiedIcon></VerifiedIcon> */}
-                                    {/* <p className="fem">@{myObject.username}</p> */}
-                                    {/* <p className="fem">@{props.name ? ` ${props.name}` : ""}</p> */}
-                                </div>
-                                <p className="fem">{value.Tweets}</p>
-                                <div>
+                    {alltweet.map((ele, ind) => {
+                        if (apidata._id == ele.userid) {
+                            return (
+                                <>
+                                    <div className="feedss">
+                                        <img className="Ppic avatar" onClick={allass} sx={{ fontSize: 50 }} src={ele.userProfile} ></img>
+                                        <p className='fnh fs-4 '>{ele.createdBy}</p>
+                                    </div>
+                                    <p className="fem">{ele.description}</p>
+                                    <div>
 
-                                    {value.url &&
-                                        (
-                                            <>
-                                                <img src={value.url} alt="Tweet Image" className="tweetimg " />
+                                        {ele.postImage &&
+                                            (
+                                                <>
+                                                    <img src={ele.postImage} alt="Tweet Image" className="tweetimg " />
+                                                </>
+                                            )
+                                        }
+                                        <hr />
 
-
-
-                                            </>
-                                        )
-                                    }
-                                    <hr />
-                                    {/* <p>{myObject.Tweets}</p> */}
-                                    {/* <img src={Following} alt="" className="tweetimg" /> */}
-
-                                </div>
-                            </>
-                        )
+                                    </div>
+                                </>
+                            )
+                        }
                     })}
                 </Box>
-                <hr />
+
                 <Box>
                     <Typography variant="h5" className="fw-bold">Who To Follow</Typography>
                     <br />

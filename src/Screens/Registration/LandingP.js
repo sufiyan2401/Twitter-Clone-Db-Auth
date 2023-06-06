@@ -66,21 +66,16 @@ function LandingP() {
         console.log(Loginvalues)
         try {
             Post('/user/login', Loginvalues)
-            
+
                 .then(res => {
                     console.log(res)
                     const userinfo = res.data.data
                     let id = localStorage.setItem('id', res.data.data._id);
                     console.log(id, "locals")
+                    navigate("/Home")
 
-
-                    navigate("/Home", {
-                        state: {
-
-                            userData: userinfo
-
-                        }
-                    });
+                    // navigate("/Home", {
+                    // });
                 }).catch(e => {
                     console.log(e)
                 })

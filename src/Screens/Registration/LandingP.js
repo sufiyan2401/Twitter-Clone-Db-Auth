@@ -53,8 +53,6 @@ function LandingP() {
     const [imageUpload, setImageUpload] = useState(null);
     const navigate = useNavigate();
     const [Loginvalues, setLoginValues] = useState({
-        // email: "",
-        // pass: "",
     });
     const [values, setValues] = useState({
 
@@ -82,33 +80,6 @@ function LandingP() {
         } catch (e) {
             console.log(e)
         }
-        // if (!Loginvalues.email || !Loginvalues.pass) {
-        //     setErrorMsg("Fill all fields");
-        //     return;
-        // }
-        // setErrorMsg("");
-
-        // setSubmitButtonDisabled(true);
-        // signInWithEmailAndPassword(auth, Loginvalues.email, Loginvalues.pass)
-        //     .then(async (success) => {
-        //         setCircle(true)
-        //         setTimeout(() => {
-
-        //             setSubmitButtonDisabled(false);
-        //             let fullid = (success.user.uid)
-
-        //             // setTimeout(()=>{
-        //             // setCircle(false)
-        //             // },5000)
-
-        //             let id = localStorage.setItem("id", fullid)
-        //             navigate("/Home");
-        //         }, 2000)
-        //     })
-        //     .catch((err) => {
-        //         setSubmitButtonDisabled(false);
-        //         setErrorMsg(err.message);
-        //     });
     };
     const imageUploading = async () => {
         let imageUrl = "";
@@ -141,73 +112,9 @@ function LandingP() {
                         setLoader(false)
                     }
                     // setImage(imageUrl)
-                })
+                }) 
         })
         console.log(values)
-
-        // let imageUrl = "";
-        // if (imageUpload == null) { return }
-        // else {
-        //     const imageRef = storageRef(storage, `images/${imageUpload.name}`)
-        //     if (!values.name || !values.email || !values.pass) {
-        //         setErrorMsg("Fill all fields");
-        //         return;
-        //     }
-        //     uploadBytes(imageRef, imageUpload).then((snapshot) => {
-        //         getDownloadURL(storageRef(storage, `images/${imageUpload.name}`))
-        //             .then((url) => {
-        //                 console.log(url)
-        //                 setErrorMsg("");
-        //                 setSubmitButtonDisabled(true);
-        //                 createUserWithEmailAndPassword(auth, values.email, values.pass)
-        //                     .then(async (success) => {
-        //                         setCircle(true)
-        //                         setSubmitButtonDisabled(false);
-
-        //                         setTimeout(() => {
-
-        //                             handleClose();
-        //                             LoginOpen()
-
-        //                         }, 5000)
-        //                         let uasd = (success.user.uid)
-
-        //                         setCircle(false)
-        //                         const user = success.user;
-        //                         await updateProfile(user, {
-        //                             displayName: values.name
-
-        //                         });
-        //                         const db = getDatabase();
-        //                         set(ref(db, `user/${success.user.uid}`), {
-        //                             id: uasd,
-        //                             username: values.name,
-        //                             email: values.email,
-        //                             followers: JSON.stringify([]),
-        //                             following: JSON.stringify([]),
-        //                             contactNumber: values.ContactNumber,
-        //                             fullName: values.FullName,
-        //                             imageUrl: url,
-        //                         });
-        //                         alert("Your Acc Is Created Plz Login Here ")
-
-        //                         // handletextchange();
-        //                     })
-        //                     .catch((err) => {
-        //                         setSubmitButtonDisabled(false);
-        //                         setErrorMsg(err.message);
-        //                     });
-
-        //             })
-        //             .catch((error) => {
-        //                 // Handle any errors
-        //             });
-
-        //         console.log(snapshot)
-        //         // alert("Image Uploaded")
-
-        //     })
-        // }
 
     }
     const handletextchange = (e) => {
@@ -263,7 +170,6 @@ function LandingP() {
                 <div className="button ">
                     <React.Fragment>
                         <a href="#" className="btn btn-signup" onClick={handleOpen}>Sign up</a>
-
                         <Modal
                             className="Moboc"
                             hideBackdrop

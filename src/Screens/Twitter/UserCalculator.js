@@ -78,40 +78,6 @@ function UserCalculator() {
   }
 
   function Getdata() {
-    // const dbRef = ref(getDatabase());
-    // get(child(dbRef, `user/`))
-    // .then((snapshot) => {
-    //   if (snapshot.exists()) {
-    //     console.log(snapshot.val() , "ids")
-    //     const allusers = []
-
-    //     let users = (Object.values(snapshot.val()))
-    //     Object.values(users).forEach((user,index)=>{
-    //         console.log(user)
-
-    //         var data ={
-    //           fullname :(user.fullName),
-    //           username : (user.username),
-    //           image: (user.imageUrl),
-    //           bio:(user.bio),
-    //           following:(user.following),
-    //           followers:(user.followers),
-    //           id:(user.id),
-    //         }
-    //         if(user.id==ID){
-    //           setLoggedin(user)
-    //           console.log(user)
-    //         }
-    //          allusers.push(data);
-    //         })
-    //         setMyObject(allusers)
-    //   } else {
-    //     console.log("No data available");
-    //   }
-    // }).catch((error) => {
-    //   console.error(error);
-    //   alert("data not received")
-    // });
     Get('/user').then((res) => {
       console.log("res.data.data", res.data)
       setMyObject(res.data)

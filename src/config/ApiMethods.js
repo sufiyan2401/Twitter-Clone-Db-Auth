@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 
 let apiHandle = axios.create({
-    baseURL: 'http://localhost:5000/api'
+    baseURL: 'https://fair-plum-starfish-shoe.cyclic.app/api/'
     // baseURL:'https://jsonplaceholder.typicode.com/'
 })
 let Get = (endPoint) => {
